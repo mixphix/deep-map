@@ -25,10 +25,10 @@ type Table = DeepMap '[Day, OrderID, CustomerID] Price
 table :: Table
 table =
   fromList3
-    [ (YearMonthDay 2021 1 1, OrderID 1, CustomerID 1, Sum 13.12)
-    , (YearMonthDay 2021 1 1, OrderID 2, CustomerID 2, Sum 4.20)
-    , (YearMonthDay 2021 1 2, OrderID 3, CustomerID 2, Sum 69.69)
-    , (YearMonthDay 2021 1 2, OrderID 4, CustomerID 3, Sum 5.00)
+    [ (YearMonthDay 2021 1 1, OrderID 1, CustomerID "Melanie", Sum 13.12)
+    , (YearMonthDay 2021 1 1, OrderID 2, CustomerID "Sock", Sum 4.20)
+    , (YearMonthDay 2021 1 2, OrderID 3, CustomerID "Sock", Sum 69.69)
+    , (YearMonthDay 2021 1 2, OrderID 4, CustomerID "Fiona", Sum 5.00)
     ]
 
 totalSales :: Table -> Price
@@ -36,11 +36,11 @@ totalSales = fold
 
 -- How much did customers spend on a given day?
 -- (note: use a DeepMap accumulator to fold within the Semigroup)
-dailySales :: Map Day Price
+dailySales :: Table -> Map Day Price
 dailySales = toMap . foldMapWithKey3 (\d _o _c p -> d @| p)
 
 -- Who purchased something on which day?
-dailyCustomers :: Map Day [CustomerID]
+dailyCustomers :: Table -> Map Day [CustomerID]
 dailyCustomers = toMap . foldMapWithKey3 (\d _o c _p -> d @| [c])
 
 -- How much has a customer paid throughout history?
@@ -60,8 +60,8 @@ orderTotalPerCustomer = invertKeys . foldShallow
 
 -- Using (@!) will NOT throw an error!
 -- It's the infix version of `findWithDefault mempty`.
-customer2Total :: Table -> Double
-customer2Total t = getSum $ totalPerCustomer t @! CustomerID 2
+sockTotal :: Table -> Double
+sockTotal t = getSum $ totalPerCustomer t @!| CustomerID "Sock"
 ```
 
 ## Shallow & deep functions
