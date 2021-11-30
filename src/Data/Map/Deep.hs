@@ -467,7 +467,7 @@ instance (Semigroup v) => Semigroup (DeepMap '[] v) where
   (<>) = onBare2 (<>)
 
 instance (Ord k, Semigroup (DeepMap ks v)) => Semigroup (DeepMap (k ': ks) v) where
-  (<>) = onNest2 (<>)
+  (<>) = onNest2 $ Map.unionWith (<>)
 
 instance (Monoid v) => Monoid (DeepMap '[] v) where
   mempty = Bare mempty
@@ -602,7 +602,7 @@ keysSet (Nest m) = Map.keysSet m
 --   If the list contains more than one value for the same key,
 --   the values are combined using '(<>)'.
 fromList :: (Ord k, Semigroup (DeepMap ks v)) => [(k, DeepMap ks v)] -> DeepMap (k ': ks) v
-fromList kvs = Nest $ Map.fromList kvs
+fromList kvs = Nest $ Map.fromListWith (flip (<>)) kvs
 
 -- | /O(n log n)/. Build a depth-1 'DeepMap' from a list of key/value pairs.
 --   If the list contains more than one value for the same key,
