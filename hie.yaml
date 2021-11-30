@@ -1,4 +1,7 @@
 cradle:
   cabal:
     - path: "./src"
-      component: "lib:deep-maps"
+      component: "lib:deep-map"
+
+    - path: "./tests"
+      component: "deep-map:test:test-readme"
