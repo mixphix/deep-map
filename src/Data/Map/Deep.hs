@@ -425,10 +425,10 @@ import Data.Functor.Identity (Identity (..))
 import Data.Functor.WithIndex (FunctorWithIndex)
 import Data.Kind (Type)
 import Data.Map.Strict (Map)
-import Data.Map.Strict qualified as Map
+import qualified Data.Map.Strict as Map
 import Data.Maybe (fromMaybe)
 import Data.Set (Set)
-import Data.Set qualified as Set
+import qualified Data.Set as Set
 import Data.Traversable.WithIndex
 import GHC.Generics
 import Prelude hiding
