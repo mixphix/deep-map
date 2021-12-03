@@ -28,11 +28,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - compiler: ghc-9.2.1
-            compilerKind: ghc
-            compilerVersion: 9.2.1
-            setup-method: ghcup
-            allow-failure: false
           - compiler: ghc-9.0.1
             compilerKind: ghc
             compilerVersion: 9.0.1
@@ -291,6 +286,9 @@ jobs:
       - name: build
         run: |
           $CABAL v2-build $ARG_COMPILER $ARG_TESTS $ARG_BENCH all --write-ghc-environment-files=always
+      - name: tests
+        run: |
+          $CABAL v2-test $ARG_COMPILER $ARG_TESTS $ARG_BENCH all --test-show-details=direct
       - name: cabal check
         run: |
           cd ${PKGDIR_deep_map} || false

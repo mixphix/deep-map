@@ -11,12 +11,12 @@ copyright: 2021 Melanie Brown
 author: Melanie Brown
 maintainer: brown.m@pm.me
 tested-with:
-  GHC ^>= 9.2
-  , GHC ^>= 9.0
-  , GHC ^>= 8.10
-  , GHC ^>= 8.8
-  , GHC ^>= 8.6
-  , GHC ^>= 8.4
+  -- GHC ^>= 9.2,
+  GHC ^>= 9.0,
+  GHC ^>= 8.10,
+  GHC ^>= 8.8,
+  GHC ^>= 8.6,
+  GHC ^>= 8.4
 
 common extensions
   ghc-options: -Wall
