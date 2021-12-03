@@ -1,5 +1,9 @@
 # deep-maps
 
+[![ci](https://img.shields.io/github/workflow/status/cigsender/deep-map/Haskell-CI)](https://github.com/cigsender/deep-map/actions/workflows/ci.yml)
+[![Hackage](https://img.shields.io/hackage/v/deep-map?color=purple)](https://hackage.haskell.org/package/deep-map)
+[![license](https://img.shields.io/github/license/cigsender/deep-map?color=purple)]()
+
 A `DeepMap` is a map that has several layers of keys.
 
 ```hs

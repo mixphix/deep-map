@@ -1,4 +1,4 @@
-cabal-version: 3.4
+cabal-version: 2.4
 name: deep-map
 version: 0.1.0.0
 category: Data, Statistics
@@ -17,6 +17,9 @@ tested-with:
   GHC ^>= 8.8,
   GHC ^>= 8.6,
   GHC ^>= 8.4
+extra-source-files:
+  README.md
+  CHANGELOG.md
 
 common extensions
   ghc-options: -Wall
@@ -61,8 +64,8 @@ library
     src
   build-depends:
     base >= 4.11 && < 5
-    , containers >= 0.5.11
-    , indexed-traversable == 0.1.2
+    , containers >= 0.5.11 && < 0.7
+    , indexed-traversable ^>= 0.1.2
   exposed-modules:
     Data.Map.Deep
 
