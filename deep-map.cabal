@@ -1,6 +1,6 @@
 cabal-version: 2.4
 name: deep-map
-version: 0.1.0.0
+version: 0.1.1.0
 category: Data, Statistics
 synopsis: Deeply-nested, multiple key type maps.
 description: Please see the README at https://github.com/cigsender/deep-map
