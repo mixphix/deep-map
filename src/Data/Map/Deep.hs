@@ -11,411 +11,412 @@
 --
 -- Its interface is intended to mimic that of 'Data.Map' from the
 -- @containers@ package, with additional convenience functions for working with deep nestings.
-module Data.Map.Deep (
-    -- * Map type
-    DeepMap (..),
-    onBare2,
-    onNest2,
+module Data.Map.Deep
+  ( -- * Map type
+    DeepMap (..)
+  , onBare2
+  , onNest2
 
     -- * Construction
-    empty,
-    singleton,
-    (@>),
-    (@|),
+  , empty
+  , singleton
+  , (@>)
+  , (@|)
 
     -- ** From Unordered Lists
-    fromList,
-    fromList1,
-    fromList2,
-    fromList3,
-    fromList4,
-    fromList5,
-    fromListWith,
-    fromListWith1,
-    fromListWithKey,
-    fromListWithKey1,
-    fromListWithKey2,
-    fromListWithKey3,
-    fromListWithKey4,
-    fromListWithKey5,
+  , fromList
+  , fromList1
+  , fromList2
+  , fromList3
+  , fromList4
+  , fromList5
+  , fromListWith
+  , fromListWith1
+  , fromListWithKey
+  , fromListWithKey1
+  , fromListWithKey2
+  , fromListWithKey3
+  , fromListWithKey4
+  , fromListWithKey5
 
     -- ** Single-depth map isomorphisms
-    toMap,
-    fromMap,
+  , toMap
+  , fromMap
 
     -- * Insertion
-    insert,
-    insert1,
-    insert2,
-    insert3,
-    insert4,
-    insert5,
-    insertWith,
-    insertWith1,
-    insertWith2,
-    insertWith3,
-    insertWith4,
-    insertWith5,
-    insertWithKey,
-    insertWithKey1,
-    insertWithKey2,
-    insertWithKey3,
-    insertWithKey4,
-    insertWithKey5,
-    insertLookupWithKey,
-    insertLookupWithKey1,
-    insertLookupWithKey2,
-    insertLookupWithKey3,
-    insertLookupWithKey4,
-    insertLookupWithKey5,
-    overwrite,
-    overwrite1,
-    overwrite2,
-    overwrite3,
-    overwrite4,
-    overwrite5,
-    overwriteLookup,
-    overwriteLookup1,
-    overwriteLookup2,
-    overwriteLookup3,
-    overwriteLookup4,
-    overwriteLookup5,
+  , insert
+  , insert1
+  , insert2
+  , insert3
+  , insert4
+  , insert5
+  , insertWith
+  , insertWith1
+  , insertWith2
+  , insertWith3
+  , insertWith4
+  , insertWith5
+  , insertWithKey
+  , insertWithKey1
+  , insertWithKey2
+  , insertWithKey3
+  , insertWithKey4
+  , insertWithKey5
+  , insertLookupWithKey
+  , insertLookupWithKey1
+  , insertLookupWithKey2
+  , insertLookupWithKey3
+  , insertLookupWithKey4
+  , insertLookupWithKey5
+  , overwrite
+  , overwrite1
+  , overwrite2
+  , overwrite3
+  , overwrite4
+  , overwrite5
+  , overwriteLookup
+  , overwriteLookup1
+  , overwriteLookup2
+  , overwriteLookup3
+  , overwriteLookup4
+  , overwriteLookup5
 
     -- * Deletion\/Update
-    delete,
-    delete1,
-    delete2,
-    delete3,
-    delete4,
-    delete5,
-    adjust,
-    adjust1,
-    adjust2,
-    adjust3,
-    adjust4,
-    adjust5,
-    adjustWithKey,
-    adjustWithKey1,
-    adjustWithKey2,
-    adjustWithKey3,
-    adjustWithKey4,
-    adjustWithKey5,
-    update,
-    update1,
-    update2,
-    update3,
-    update4,
-    update5,
-    updateWithKey,
-    updateWithKey1,
-    updateWithKey2,
-    updateWithKey3,
-    updateWithKey4,
-    updateWithKey5,
-    updateLookupWithKey,
-    updateLookupWithKey1,
-    updateLookupWithKey2,
-    updateLookupWithKey3,
-    updateLookupWithKey4,
-    updateLookupWithKey5,
-    alter,
-    alter1,
-    alter2,
-    alter3,
-    alter4,
-    alter5,
-    alterF,
-    alterF1,
-    alterF2,
-    alterF3,
-    alterF4,
-    alterF5,
+  , delete
+  , delete1
+  , delete2
+  , delete3
+  , delete4
+  , delete5
+  , adjust
+  , adjust1
+  , adjust2
+  , adjust3
+  , adjust4
+  , adjust5
+  , adjustWithKey
+  , adjustWithKey1
+  , adjustWithKey2
+  , adjustWithKey3
+  , adjustWithKey4
+  , adjustWithKey5
+  , update
+  , update1
+  , update2
+  , update3
+  , update4
+  , update5
+  , updateWithKey
+  , updateWithKey1
+  , updateWithKey2
+  , updateWithKey3
+  , updateWithKey4
+  , updateWithKey5
+  , updateLookupWithKey
+  , updateLookupWithKey1
+  , updateLookupWithKey2
+  , updateLookupWithKey3
+  , updateLookupWithKey4
+  , updateLookupWithKey5
+  , alter
+  , alter1
+  , alter2
+  , alter3
+  , alter4
+  , alter5
+  , alterF
+  , alterF1
+  , alterF2
+  , alterF3
+  , alterF4
+  , alterF5
 
     -- * Query
 
     -- ** Lookup
-    lookup,
-    (@?),
-    (@?|),
-    (@??),
-    (@??|),
-    (@!),
-    (@!|),
-    findWithDefault,
-    findWithDefault1,
-    findWithDefault2,
-    findWithDefault3,
-    findWithDefault4,
-    findWithDefault5,
-    member,
-    notMember,
-    lookupLT,
-    lookupGT,
-    lookupLE,
-    lookupGE,
+  , lookup
+  , (@?)
+  , (@?|)
+  , (@??)
+  , (@??|)
+  , (@!)
+  , (@!|)
+  , findWithDefault
+  , findWithDefault1
+  , findWithDefault2
+  , findWithDefault3
+  , findWithDefault4
+  , findWithDefault5
+  , member
+  , notMember
+  , lookupLT
+  , lookupGT
+  , lookupLE
+  , lookupGE
 
     -- ** Size
-    null,
-    size,
+  , null
+  , size
 
     -- * Combine
 
     -- ** Union
-    union,
-    unionWith,
-    unionWith1,
-    unionWith2,
-    unionWith3,
-    unionWith4,
-    unionWith5,
-    unionWithKey,
-    unionWithKey1,
-    unionWithKey2,
-    unionWithKey3,
-    unionWithKey4,
-    unionWithKey5,
-    unions,
-    unionsWith,
-    unionsWith1,
+  , union
+  , unionWith
+  , unionWith1
+  , unionWith2
+  , unionWith3
+  , unionWith4
+  , unionWith5
+  , unionWithKey
+  , unionWithKey1
+  , unionWithKey2
+  , unionWithKey3
+  , unionWithKey4
+  , unionWithKey5
+  , unions
+  , unionsWith
+  , unionsWith1
 
     -- ** Difference
-    difference,
-    (\\),
-    differenceWith,
-    differenceWith1,
-    differenceWithKey,
-    differenceWithKey1,
+  , difference
+  , (\\)
+  , differenceWith
+  , differenceWith1
+  , differenceWithKey
+  , differenceWithKey1
 
     -- ** Intersection
-    intersection,
-    intersectionWith,
-    intersectionWith1,
-    intersectionWithKey,
-    intersectionWithKey1,
-    intersectionWithKey2,
-    intersectionWithKey3,
-    intersectionWithKey4,
-    intersectionWithKey5,
+  , intersection
+  , intersectionWith
+  , intersectionWith1
+  , intersectionWithKey
+  , intersectionWithKey1
+  , intersectionWithKey2
+  , intersectionWithKey3
+  , intersectionWithKey4
+  , intersectionWithKey5
 
     -- * Traversal
 
     -- ** Map
-    mapShallow,
-    mapShallowWithKey,
-    mapWithKey1,
-    mapWithKey2,
-    mapWithKey3,
-    mapWithKey4,
-    mapWithKey5,
-    traverseShallow,
-    traverseShallowWithKey,
-    traverseWithKey1,
-    traverseWithKey2,
-    traverseWithKey3,
-    traverseWithKey4,
-    traverseWithKey5,
-    traverseMaybeWithKey,
-    traverseMaybeWithKey1,
-    traverseMaybeWithKey2,
-    traverseMaybeWithKey3,
-    traverseMaybeWithKey4,
-    traverseMaybeWithKey5,
-    mapAccum,
-    mapAccum1,
-    mapAccumR,
-    mapAccumR1,
-    mapAccumWithKey,
-    mapAccumWithKey1,
-    mapAccumWithKey2,
-    mapAccumWithKey3,
-    mapAccumWithKey4,
-    mapAccumWithKey5,
-    mapAccumRWithKey,
-    mapAccumRWithKey1,
-    mapAccumRWithKey2,
-    mapAccumRWithKey3,
-    mapAccumRWithKey4,
-    mapAccumRWithKey5,
-    mapKeys,
-    mapKeys1,
-    mapKeys2,
-    mapKeys3,
-    mapKeys4,
-    mapKeys5,
-    mapKeysWith,
-    mapKeysWith1,
-    mapKeysWith2,
-    mapKeysWith3,
-    mapKeysWith4,
-    mapKeysWith5,
-    traverseKeys,
-    traverseKeysWith,
-    mapKeysM,
-    mapKeysM1,
-    mapKeysM2,
-    mapKeysM3,
-    mapKeysM4,
-    mapKeysM5,
-    mapKeysMWith,
-    mapKeysMWith1,
-    mapKeysMWith2,
-    mapKeysMWith3,
-    mapKeysMWith4,
-    mapKeysMWith5,
+  , mapShallow
+  , mapShallowWithKey
+  , mapWithKey1
+  , mapWithKey2
+  , mapWithKey3
+  , mapWithKey4
+  , mapWithKey5
+  , traverseShallow
+  , traverseShallowWithKey
+  , traverseWithKey1
+  , traverseWithKey2
+  , traverseWithKey3
+  , traverseWithKey4
+  , traverseWithKey5
+  , traverseMaybeWithKey
+  , traverseMaybeWithKey1
+  , traverseMaybeWithKey2
+  , traverseMaybeWithKey3
+  , traverseMaybeWithKey4
+  , traverseMaybeWithKey5
+  , mapAccum
+  , mapAccum1
+  , mapAccumR
+  , mapAccumR1
+  , mapAccumWithKey
+  , mapAccumWithKey1
+  , mapAccumWithKey2
+  , mapAccumWithKey3
+  , mapAccumWithKey4
+  , mapAccumWithKey5
+  , mapAccumRWithKey
+  , mapAccumRWithKey1
+  , mapAccumRWithKey2
+  , mapAccumRWithKey3
+  , mapAccumRWithKey4
+  , mapAccumRWithKey5
+  , mapKeys
+  , mapKeys1
+  , mapKeys2
+  , mapKeys3
+  , mapKeys4
+  , mapKeys5
+  , mapKeysWith
+  , mapKeysWith1
+  , mapKeysWith2
+  , mapKeysWith3
+  , mapKeysWith4
+  , mapKeysWith5
+  , traverseKeys
+  , traverseKeysWith
+  , mapKeysM
+  , mapKeysM1
+  , mapKeysM2
+  , mapKeysM3
+  , mapKeysM4
+  , mapKeysM5
+  , mapKeysMWith
+  , mapKeysMWith1
+  , mapKeysMWith2
+  , mapKeysMWith3
+  , mapKeysMWith4
+  , mapKeysMWith5
 
     -- * Folds
-    foldr,
-    foldl,
-    foldShallow,
-    foldrWithKey,
-    foldrWithKey1,
-    foldrWithKey2,
-    foldrWithKey3,
-    foldrWithKey4,
-    foldrWithKey5,
-    foldlWithKey,
-    foldlWithKey1,
-    foldlWithKey2,
-    foldlWithKey3,
-    foldlWithKey4,
-    foldlWithKey5,
-    foldMapWithKey,
-    foldMapWithKey1,
-    foldMapWithKey2,
-    foldMapWithKey3,
-    foldMapWithKey4,
-    foldMapWithKey5,
+  , foldr
+  , foldl
+  , foldShallow
+  , foldrWithKey
+  , foldrWithKey1
+  , foldrWithKey2
+  , foldrWithKey3
+  , foldrWithKey4
+  , foldrWithKey5
+  , foldlWithKey
+  , foldlWithKey1
+  , foldlWithKey2
+  , foldlWithKey3
+  , foldlWithKey4
+  , foldlWithKey5
+  , foldMapWithKey
+  , foldMapWithKey1
+  , foldMapWithKey2
+  , foldMapWithKey3
+  , foldMapWithKey4
+  , foldMapWithKey5
 
     -- ** Strict folds
-    foldr',
-    foldl',
-    foldrWithKey',
-    foldrWithKey1',
-    foldrWithKey2',
-    foldrWithKey3',
-    foldrWithKey4',
-    foldrWithKey5',
-    foldlWithKey',
-    foldlWithKey1',
-    foldlWithKey2',
-    foldlWithKey3',
-    foldlWithKey4',
-    foldlWithKey5',
-    foldMapWithKey',
-    foldMapWithKey1',
-    foldMapWithKey2',
-    foldMapWithKey3',
-    foldMapWithKey4',
-    foldMapWithKey5',
+  , foldr'
+  , foldl'
+  , foldrWithKey'
+  , foldrWithKey1'
+  , foldrWithKey2'
+  , foldrWithKey3'
+  , foldrWithKey4'
+  , foldrWithKey5'
+  , foldlWithKey'
+  , foldlWithKey1'
+  , foldlWithKey2'
+  , foldlWithKey3'
+  , foldlWithKey4'
+  , foldlWithKey5'
+  , foldMapWithKey'
+  , foldMapWithKey1'
+  , foldMapWithKey2'
+  , foldMapWithKey3'
+  , foldMapWithKey4'
+  , foldMapWithKey5'
 
     -- * Conversion
-    elems,
-    elems1,
-    keys,
-    assocs,
-    assocs1,
-    keysSet,
-    invertKeys,
+  , elems
+  , elems1
+  , keys
+  , assocs
+  , assocs1
+  , keysSet
+  , invertKeys
 
     -- ** Lists
-    toList,
+  , toList
 
     -- *** Ordered lists
-    toAscList,
-    toDescList,
+  , toAscList
+  , toDescList
 
     -- * Filter
-    filter,
-    filter1,
-    filter2,
-    filter3,
-    filter4,
-    filter5,
-    filterWithKey,
-    filterWithKey1,
-    filterWithKey2,
-    filterWithKey3,
-    filterWithKey4,
-    filterWithKey5,
-    restrictKeys,
-    restrictKeys2,
-    restrictKeys3,
-    restrictKeys4,
-    restrictKeys5,
-    withoutKeys,
-    withoutKeys2,
-    withoutKeys3,
-    withoutKeys4,
-    withoutKeys5,
-    partition,
-    partition1,
-    partition2,
-    partition3,
-    partition4,
-    partition5,
-    partitionWithKey,
-    partitionWithKey1,
-    partitionWithKey2,
-    partitionWithKey3,
-    partitionWithKey4,
-    partitionWithKey5,
-    takeWhileAntitone,
-    dropWhileAntitone,
-    spanAntitone,
-    mapMaybe,
-    mapShallowMaybe,
-    mapShallowMaybeWithKey,
-    mapMaybeWithKey1,
-    mapMaybeWithKey2,
-    mapMaybeWithKey3,
-    mapMaybeWithKey4,
-    mapMaybeWithKey5,
-    mapEither,
-    mapShallowEither,
-    mapShallowEitherWithKey,
-    mapEitherWithKey1,
-    mapEitherWithKey2,
-    mapEitherWithKey3,
-    mapEitherWithKey4,
-    mapEitherWithKey5,
-    split,
-    splitLookup,
-    splitRoot,
+  , filter
+  , filter1
+  , filter2
+  , filter3
+  , filter4
+  , filter5
+  , filterWithKey
+  , filterWithKey1
+  , filterWithKey2
+  , filterWithKey3
+  , filterWithKey4
+  , filterWithKey5
+  , restrictKeys
+  , restrictKeys2
+  , restrictKeys3
+  , restrictKeys4
+  , restrictKeys5
+  , withoutKeys
+  , withoutKeys2
+  , withoutKeys3
+  , withoutKeys4
+  , withoutKeys5
+  , partition
+  , partition1
+  , partition2
+  , partition3
+  , partition4
+  , partition5
+  , partitionWithKey
+  , partitionWithKey1
+  , partitionWithKey2
+  , partitionWithKey3
+  , partitionWithKey4
+  , partitionWithKey5
+  , takeWhileAntitone
+  , dropWhileAntitone
+  , spanAntitone
+  , mapMaybe
+  , mapShallowMaybe
+  , mapShallowMaybeWithKey
+  , mapMaybeWithKey1
+  , mapMaybeWithKey2
+  , mapMaybeWithKey3
+  , mapMaybeWithKey4
+  , mapMaybeWithKey5
+  , mapEither
+  , mapShallowEither
+  , mapShallowEitherWithKey
+  , mapEitherWithKey1
+  , mapEitherWithKey2
+  , mapEitherWithKey3
+  , mapEitherWithKey4
+  , mapEitherWithKey5
+  , split
+  , splitLookup
+  , splitRoot
 
     -- * Submap
-    isSubmapOf,
-    isSubmapOfBy,
-    isProperSubmapOf,
-    isProperSubmapOfBy,
+  , isSubmapOf
+  , isSubmapOfBy
+  , isProperSubmapOf
+  , isProperSubmapOfBy
 
     -- * Indexed
-    lookupIndex,
-    findIndex,
-    elemAt,
-    updateAt,
-    deleteAt,
-    take,
-    drop,
-    splitAt,
+  , lookupIndex
+  , findIndex
+  , elemAt
+  , updateAt
+  , deleteAt
+  , take
+  , drop
+  , splitAt
 
     -- * Min\/Max
-    lookupMin,
-    lookupMax,
-    findMin,
-    findMax,
-    deleteMin,
-    deleteMax,
-    deleteFindMin,
-    deleteFindMax,
-    updateMin,
-    updateMax,
-    updateMinWithKey,
-    updateMaxWithKey,
-    minView,
-    maxView,
-    minViewWithKey,
-    maxViewWithKey,
-) where
+  , lookupMin
+  , lookupMax
+  , findMin
+  , findMax
+  , deleteMin
+  , deleteMax
+  , deleteFindMin
+  , deleteFindMax
+  , updateMin
+  , updateMax
+  , updateMinWithKey
+  , updateMaxWithKey
+  , minView
+  , maxView
+  , minViewWithKey
+  , maxViewWithKey
+  )
+where
 
 import Control.Arrow (Arrow ((&&&)), ArrowChoice ((+++), (|||)), (***))
 import Data.Bool (bool)
@@ -436,49 +437,49 @@ import Data.Set (Set)
 import qualified Data.Set as Set
 import Data.Traversable.WithIndex
 import GHC.Generics
-import Prelude hiding (
-    drop,
-    filter,
-    lookup,
-    map,
-    null,
-    splitAt,
-    take,
- )
+import Prelude hiding
+  ( drop
+  , filter
+  , lookup
+  , map
+  , null
+  , splitAt
+  , take
+  )
 
 data DeepMap (ks :: [Type]) (v :: Type) :: Type where
-    Bare :: {getBare :: v} -> DeepMap '[] v
-    Nest :: {getNest :: Map k (DeepMap ks v)} -> DeepMap (k ': ks) v
+  Bare :: {getBare :: v} -> DeepMap '[] v
+  Nest :: {getNest :: Map k (DeepMap ks v)} -> DeepMap (k ': ks) v
 
 instance (Eq v) => Eq (DeepMap '[] v) where
-    Bare v1 == Bare v2 = v1 == v2
+  Bare v1 == Bare v2 = v1 == v2
 
 instance (Eq k, Eq (DeepMap ks v)) => Eq (DeepMap (k ': ks) v) where
-    Nest v1 == Nest v2 = v1 == v2
+  Nest v1 == Nest v2 = v1 == v2
 
 instance (Ord v) => Ord (DeepMap '[] v) where
-    Bare v1 <= Bare v2 = v1 <= v2
+  Bare v1 <= Bare v2 = v1 <= v2
 
 instance (Ord k, Ord (DeepMap ks v)) => Ord (DeepMap (k ': ks) v) where
-    Nest v1 <= Nest v2 = v1 <= v2
+  Nest v1 <= Nest v2 = v1 <= v2
 
 instance (Show v) => Show (DeepMap '[] v) where
-    show (Bare v) = "Bare " <> show v
+  show (Bare v) = "Bare " <> show v
 
 instance (Show k, Show (DeepMap ks v)) => Show (DeepMap (k ': ks) v) where
-    show (Nest v) = "Nest {" <> show v <> "}"
+  show (Nest v) = "Nest {" <> show v <> "}"
 
 instance (Semigroup v) => Semigroup (DeepMap '[] v) where
-    (<>) = onBare2 (<>)
+  (<>) = onBare2 (<>)
 
 instance (Ord k, Semigroup (DeepMap ks v)) => Semigroup (DeepMap (k ': ks) v) where
-    (<>) = onNest2 $ Map.unionWith (<>)
+  (<>) = onNest2 $ Map.unionWith (<>)
 
 instance (Monoid v) => Monoid (DeepMap '[] v) where
-    mempty = Bare mempty
+  mempty = Bare mempty
 
 instance (Ord k, Semigroup (DeepMap ks v)) => Monoid (DeepMap (k ': ks) v) where
-    mempty = Nest mempty
+  mempty = Nest mempty
 
 deriving instance Functor (DeepMap ks)
 
@@ -491,14 +492,14 @@ instance FunctorWithIndex () (DeepMap '[])
 instance FoldableWithIndex () (DeepMap '[])
 
 instance TraversableWithIndex () (DeepMap '[]) where
-    itraverse f (Bare v) = Bare <$> f () v
+  itraverse f (Bare v) = Bare <$> f () v
 
 instance (TraversableWithIndex ki (DeepMap ks)) => FunctorWithIndex (k, ki) (DeepMap (k ': ks))
 
 instance (TraversableWithIndex ki (DeepMap ks)) => FoldableWithIndex (k, ki) (DeepMap (k ': ks))
 
 instance (TraversableWithIndex ki (DeepMap ks)) => TraversableWithIndex (k, ki) (DeepMap (k ': ks)) where
-    itraverse f = traverseShallowWithKey (itraverse . curry f)
+  itraverse f = traverseShallowWithKey (itraverse . curry f)
 
 deriving instance (Typeable v) => Typeable (DeepMap '[] v)
 
@@ -512,24 +513,24 @@ conBare = mkConstr tyDeepMap "Bare" [] Data.Data.Prefix
 conNest = mkConstr tyDeepMap "Nest" [] Data.Data.Prefix
 
 instance (Data v) => Data (DeepMap '[] v) where
-    dataTypeOf _ = tyDeepMap
-    toConstr (Bare _) = conBare
-    gunfold k z _ = k (z Bare)
+  dataTypeOf _ = tyDeepMap
+  toConstr (Bare _) = conBare
+  gunfold k z _ = k (z Bare)
 
 instance (Ord k, Data k, Typeable ks, Typeable v, Data (DeepMap ks v)) => Data (DeepMap (k ': ks) v) where
-    dataTypeOf _ = tyDeepMap
-    toConstr (Nest _) = conNest
-    gunfold k z _ = k (z Nest)
+  dataTypeOf _ = tyDeepMap
+  toConstr (Nest _) = conNest
+  gunfold k z _ = k (z Nest)
 
 instance (Generic v) => Generic (DeepMap '[] v) where
-    type Rep (DeepMap '[] v) = Const v
-    from (Bare v) = Const v
-    to (Const v) = Bare v
+  type Rep (DeepMap '[] v) = Const v
+  from (Bare v) = Const v
+  to (Const v) = Bare v
 
 instance (Ord k, Generic k, Generic (DeepMap ks v)) => Generic (DeepMap (k ': ks) v) where
-    type Rep (DeepMap (k ': ks) v) = Compose [] (Const k :*: Rep (DeepMap ks v))
-    from m = Compose $ (\(k, dm) -> Const k :*: from dm) <$> assocs m
-    to (Compose kvs) = Nest . Map.fromList $ (\(Const k :*: dm') -> (k, to dm')) <$> kvs
+  type Rep (DeepMap (k ': ks) v) = Compose [] (Const k :*: Rep (DeepMap ks v))
+  from m = Compose $ (\(k, dm) -> Const k :*: from dm) <$> assocs m
+  to (Compose kvs) = Nest . Map.fromList $ (\(Const k :*: dm') -> (k, to dm')) <$> kvs
 
 -- | Apply a two-argument function through a shallow 'DeepMap', akin to 'liftA2'.
 onBare2 :: (v -> w -> x) -> DeepMap '[] v -> DeepMap '[] w -> DeepMap '[] x
@@ -660,26 +661,26 @@ fromListWithKey1 f kvs = Nest $ Bare <$> Map.fromListWithKey f kvs
 -- | /O(n log n)/. Build a depth-2 'DeepMap' from a list of keys and values with a combining function.
 fromListWithKey2 :: (Ord k0, Ord k1) => (k0 -> k1 -> v -> v -> v) -> [(k0, k1, v)] -> DeepMap '[k0, k1] v
 fromListWithKey2 f kvs =
-    fromListWithKey (unionWithKey1 . f) $
-        (\(k0, k1, v) -> (k0, k1 @| v)) <$> kvs
+  fromListWithKey (unionWithKey1 . f) $
+    (\(k0, k1, v) -> (k0, k1 @| v)) <$> kvs
 
 -- | /O(n log n)/. Build a depth-3 'DeepMap' from a list of keys and values with a combining function.
 fromListWithKey3 :: (Ord k0, Ord k1, Ord k2) => (k0 -> k1 -> k2 -> v -> v -> v) -> [(k0, k1, k2, v)] -> DeepMap '[k0, k1, k2] v
 fromListWithKey3 f kvs =
-    fromListWithKey (unionWithKey2 . f) $
-        (\(k0, k1, k2, v) -> (k0, k1 @> k2 @| v)) <$> kvs
+  fromListWithKey (unionWithKey2 . f) $
+    (\(k0, k1, k2, v) -> (k0, k1 @> k2 @| v)) <$> kvs
 
 -- | /O(n log n)/. Build a depth-3 'DeepMap' from a list of keys and values with a combining function.
 fromListWithKey4 :: (Ord k0, Ord k1, Ord k2, Ord k3) => (k0 -> k1 -> k2 -> k3 -> v -> v -> v) -> [(k0, k1, k2, k3, v)] -> DeepMap '[k0, k1, k2, k3] v
 fromListWithKey4 f kvs =
-    fromListWithKey (unionWithKey3 . f) $
-        (\(k0, k1, k2, k3, v) -> (k0, k1 @> k2 @> k3 @| v)) <$> kvs
+  fromListWithKey (unionWithKey3 . f) $
+    (\(k0, k1, k2, k3, v) -> (k0, k1 @> k2 @> k3 @| v)) <$> kvs
 
 -- | /O(n log n)/. Build a depth-3 'DeepMap' from a list of keys and values with a combining function.
 fromListWithKey5 :: (Ord k0, Ord k1, Ord k2, Ord k3, Ord k4) => (k0 -> k1 -> k2 -> k3 -> k4 -> v -> v -> v) -> [(k0, k1, k2, k3, k4, v)] -> DeepMap '[k0, k1, k2, k3, k4] v
 fromListWithKey5 f kvs =
-    fromListWithKey (unionWithKey4 . f) $
-        (\(k0, k1, k2, k3, k4, v) -> (k0, k1 @> k2 @> k3 @> k4 @| v)) <$> kvs
+  fromListWithKey (unionWithKey4 . f) $
+    (\(k0, k1, k2, k3, k4, v) -> (k0, k1 @> k2 @> k3 @> k4 @| v)) <$> kvs
 
 -- | /O(log n)/. Insert a key/'DeepMap' pair into the 'DeepMap'. If the key is already
 --   present in the map, the associated value is combined with the new value as @old '<>' new@.
@@ -740,8 +741,16 @@ overwrite2 k0 k1 v m = overwrite k0 (overwrite k1 (Bare v) . fromMaybe empty $ m
 
 -- | /O(log n)/. Insert a new key-chain/value pair into a depth-3 'DeepMap'. If the key is already
 --   present in the map, the associated value is replaced by the new value.
-overwrite3 :: (Ord k0, Ord k1, Ord k2) => k0 -> k1 -> k2 -> v -> DeepMap '[k0, k1, k2] v -> DeepMap '[k0, k1, k2] v
-overwrite3 k0 k1 k2 v m = overwrite k0 (overwrite2 k1 k2 v . fromMaybe empty $ m @? k0) m
+overwrite3 ::
+  (Ord k0, Ord k1, Ord k2) =>
+  k0 ->
+  k1 ->
+  k2 ->
+  v ->
+  DeepMap '[k0, k1, k2] v ->
+  DeepMap '[k0, k1, k2] v
+overwrite3 k0 k1 k2 v m =
+  overwrite k0 (overwrite2 k1 k2 v . fromMaybe empty $ m @? k0) m
 
 -- | /O(log n)/. Insert a new key-chain/value pair into a depth-4 'DeepMap'. If the key is already
 --   present in the map, the associated value is replaced by the new value.
@@ -797,29 +806,29 @@ insertWith1 f k v = insertWith (onBare2 f) k (Bare v)
 --   using the supplied function.
 insertWith2 :: (Ord k0, Ord k1) => (v -> v -> v) -> k0 -> k1 -> v -> DeepMap '[k0, k1] v -> DeepMap '[k0, k1] v
 insertWith2 f k0 k1 v m = case m @? k0 of
-    Nothing -> overwrite2 k0 k1 v m
-    Just dm -> overwrite k0 (insertWith1 f k1 v dm) m
+  Nothing -> overwrite2 k0 k1 v m
+  Just dm -> overwrite k0 (insertWith1 f k1 v dm) m
 
 -- | /O(log n)/. Insert with a function, combining new value and old value
 --   using the supplied function.
 insertWith3 :: (Ord k0, Ord k1, Ord k2) => (v -> v -> v) -> k0 -> k1 -> k2 -> v -> DeepMap '[k0, k1, k2] v -> DeepMap '[k0, k1, k2] v
 insertWith3 f k0 k1 k2 v m = case m @? k0 of
-    Nothing -> overwrite3 k0 k1 k2 v m
-    Just dm -> overwrite k0 (insertWith2 f k1 k2 v dm) m
+  Nothing -> overwrite3 k0 k1 k2 v m
+  Just dm -> overwrite k0 (insertWith2 f k1 k2 v dm) m
 
 -- | /O(log n)/. Insert with a function, combining new value and old value
 --   using the supplied function.
 insertWith4 :: (Ord k0, Ord k1, Ord k2, Ord k3) => (v -> v -> v) -> k0 -> k1 -> k2 -> k3 -> v -> DeepMap '[k0, k1, k2, k3] v -> DeepMap '[k0, k1, k2, k3] v
 insertWith4 f k0 k1 k2 k3 v m = case m @? k0 of
-    Nothing -> overwrite4 k0 k1 k2 k3 v m
-    Just dm -> overwrite k0 (insertWith3 f k1 k2 k3 v dm) m
+  Nothing -> overwrite4 k0 k1 k2 k3 v m
+  Just dm -> overwrite k0 (insertWith3 f k1 k2 k3 v dm) m
 
 -- | /O(log n)/. Insert with a function, combining new value and old value
 --   using the supplied function.
 insertWith5 :: (Ord k0, Ord k1, Ord k2, Ord k3, Ord k4) => (v -> v -> v) -> k0 -> k1 -> k2 -> k3 -> k4 -> v -> DeepMap '[k0, k1, k2, k3, k4] v -> DeepMap '[k0, k1, k2, k3, k4] v
 insertWith5 f k0 k1 k2 k3 k4 v m = case m @? k0 of
-    Nothing -> overwrite5 k0 k1 k2 k3 k4 v m
-    Just dm -> overwrite k0 (insertWith4 f k1 k2 k3 k4 v dm) m
+  Nothing -> overwrite5 k0 k1 k2 k3 k4 v m
+  Just dm -> overwrite k0 (insertWith4 f k1 k2 k3 k4 v dm) m
 
 -- | /O(log n)/. Insert with a function, combining new value and old value
 --   using the supplied function.
@@ -839,29 +848,29 @@ insertWithKey1 f k v = insertWithKey (onBare2 . f) k (Bare v)
 --   using the supplied function with access to the given keys.
 insertWithKey2 :: (Ord k0, Ord k1) => (k0 -> k1 -> v -> v -> v) -> k0 -> k1 -> v -> DeepMap '[k0, k1] v -> DeepMap '[k0, k1] v
 insertWithKey2 f k0 k1 v m = case m @? k0 of
-    Nothing -> overwrite2 k0 k1 v m
-    Just dm -> overwrite k0 (insertWithKey1 (f k0) k1 v dm) m
+  Nothing -> overwrite2 k0 k1 v m
+  Just dm -> overwrite k0 (insertWithKey1 (f k0) k1 v dm) m
 
 -- | /O(log n)/. Insert with a function, combining new value and old value
 --   using the supplied function with access to the given keys.
 insertWithKey3 :: (Ord k0, Ord k1, Ord k2) => (k0 -> k1 -> k2 -> v -> v -> v) -> k0 -> k1 -> k2 -> v -> DeepMap '[k0, k1, k2] v -> DeepMap '[k0, k1, k2] v
 insertWithKey3 f k0 k1 k2 v m = case m @? k0 of
-    Nothing -> overwrite3 k0 k1 k2 v m
-    Just dm -> overwrite k0 (insertWithKey2 (f k0) k1 k2 v dm) m
+  Nothing -> overwrite3 k0 k1 k2 v m
+  Just dm -> overwrite k0 (insertWithKey2 (f k0) k1 k2 v dm) m
 
 -- | /O(log n)/. Insert with a function, combining new value and old value
 --   using the supplied function with access to the given keys.
 insertWithKey4 :: (Ord k0, Ord k1, Ord k2, Ord k3) => (k0 -> k1 -> k2 -> k3 -> v -> v -> v) -> k0 -> k1 -> k2 -> k3 -> v -> DeepMap '[k0, k1, k2, k3] v -> DeepMap '[k0, k1, k2, k3] v
 insertWithKey4 f k0 k1 k2 k3 v m = case m @? k0 of
-    Nothing -> overwrite4 k0 k1 k2 k3 v m
-    Just dm -> overwrite k0 (insertWithKey3 (f k0) k1 k2 k3 v dm) m
+  Nothing -> overwrite4 k0 k1 k2 k3 v m
+  Just dm -> overwrite k0 (insertWithKey3 (f k0) k1 k2 k3 v dm) m
 
 -- | /O(log n)/. Insert with a function, combining new value and old value
 --   using the supplied function with access to the given keys.
 insertWithKey5 :: (Ord k0, Ord k1, Ord k2, Ord k3, Ord k4) => (k0 -> k1 -> k2 -> k3 -> k4 -> v -> v -> v) -> k0 -> k1 -> k2 -> k3 -> k4 -> v -> DeepMap '[k0, k1, k2, k3, k4] v -> DeepMap '[k0, k1, k2, k3, k4] v
 insertWithKey5 f k0 k1 k2 k3 k4 v m = case m @? k0 of
-    Nothing -> overwrite5 k0 k1 k2 k3 k4 v m
-    Just dm -> overwrite k0 (insertWithKey4 (f k0) k1 k2 k3 k4 v dm) m
+  Nothing -> overwrite5 k0 k1 k2 k3 k4 v m
+  Just dm -> overwrite k0 (insertWithKey4 (f k0) k1 k2 k3 k4 v dm) m
 
 -- | /O(log n)/. Combines insertion and retrieval.
 --
@@ -900,26 +909,26 @@ delete1 = delete
 -- | /O(log n)/. Delete a key and its value from the map, or do nothing if the key is missing.
 delete2 :: (Ord k0, Ord k1) => k0 -> k1 -> DeepMap '[k0, k1] v -> DeepMap '[k0, k1] v
 delete2 k0 k1 m = case m @? k0 of
-    Nothing -> m
-    Just dm -> overwrite k0 (delete1 k1 dm) m
+  Nothing -> m
+  Just dm -> overwrite k0 (delete1 k1 dm) m
 
 -- | /O(log n)/. Delete a key and its value from the map, or do nothing if the key is missing.
 delete3 :: (Ord k0, Ord k1, Ord k2) => k0 -> k1 -> k2 -> DeepMap '[k0, k1, k2] v -> DeepMap '[k0, k1, k2] v
 delete3 k0 k1 k2 m = case m @? k0 of
-    Nothing -> m
-    Just dm -> overwrite k0 (delete2 k1 k2 dm) m
+  Nothing -> m
+  Just dm -> overwrite k0 (delete2 k1 k2 dm) m
 
 -- | /O(log n)/. Delete a key and its value from the map, or do nothing if the key is missing.
 delete4 :: (Ord k0, Ord k1, Ord k2, Ord k3) => k0 -> k1 -> k2 -> k3 -> DeepMap '[k0, k1, k2, k3] v -> DeepMap '[k0, k1, k2, k3] v
 delete4 k0 k1 k2 k3 m = case m @? k0 of
-    Nothing -> m
-    Just dm -> overwrite k0 (delete3 k1 k2 k3 dm) m
+  Nothing -> m
+  Just dm -> overwrite k0 (delete3 k1 k2 k3 dm) m
 
 -- | /O(log n)/. Delete a key and its value from the map, or do nothing if the key is missing.
 delete5 :: (Ord k0, Ord k1, Ord k2, Ord k3, Ord k4) => k0 -> k1 -> k2 -> k3 -> k4 -> DeepMap '[k0, k1, k2, k3, k4] v -> DeepMap '[k0, k1, k2, k3, k4] v
 delete5 k0 k1 k2 k3 k4 m = case m @? k0 of
-    Nothing -> m
-    Just dm -> overwrite k0 (delete4 k1 k2 k3 k4 dm) m
+  Nothing -> m
+  Just dm -> overwrite k0 (delete4 k1 k2 k3 k4 dm) m
 
 -- | /O(log n)/. Change a value at a specific key with the result of the provided function,
 --   or do nothing if the key is missing.
@@ -935,29 +944,29 @@ adjust1 f = adjust (fmap f)
 --   or do nothing if the key is missing.
 adjust2 :: (Ord k0, Ord k1) => (v -> v) -> k0 -> k1 -> DeepMap '[k0, k1] v -> DeepMap '[k0, k1] v
 adjust2 f k0 k1 m = case m @? k0 of
-    Nothing -> m
-    Just dm -> overwrite k0 (adjust1 f k1 dm) m
+  Nothing -> m
+  Just dm -> overwrite k0 (adjust1 f k1 dm) m
 
 -- | /O(log n)/. Change a value at specific keys with the result of the provided function,
 --   or do nothing if the key is missing.
 adjust3 :: (Ord k0, Ord k1, Ord k2) => (v -> v) -> k0 -> k1 -> k2 -> DeepMap '[k0, k1, k2] v -> DeepMap '[k0, k1, k2] v
 adjust3 f k0 k1 k2 m = case m @? k0 of
-    Nothing -> m
-    Just dm -> overwrite k0 (adjust2 f k1 k2 dm) m
+  Nothing -> m
+  Just dm -> overwrite k0 (adjust2 f k1 k2 dm) m
 
 -- | /O(log n)/. Change a value at specific keys with the result of the provided function,
 --   or do nothing if the key is missing.
 adjust4 :: (Ord k0, Ord k1, Ord k2, Ord k3) => (v -> v) -> k0 -> k1 -> k2 -> k3 -> DeepMap '[k0, k1, k2, k3] v -> DeepMap '[k0, k1, k2, k3] v
 adjust4 f k0 k1 k2 k3 m = case m @? k0 of
-    Nothing -> m
-    Just dm -> overwrite k0 (adjust3 f k1 k2 k3 dm) m
+  Nothing -> m
+  Just dm -> overwrite k0 (adjust3 f k1 k2 k3 dm) m
 
 -- | /O(log n)/. Change a value at specific keys with the result of the provided function,
 --   or do nothing if the key is missing.
 adjust5 :: (Ord k0, Ord k1, Ord k2, Ord k3, Ord k4) => (v -> v) -> k0 -> k1 -> k2 -> k3 -> k4 -> DeepMap '[k0, k1, k2, k3, k4] v -> DeepMap '[k0, k1, k2, k3, k4] v
 adjust5 f k0 k1 k2 k3 k4 m = case m @? k0 of
-    Nothing -> m
-    Just dm -> overwrite k0 (adjust4 f k1 k2 k3 k4 dm) m
+  Nothing -> m
+  Just dm -> overwrite k0 (adjust4 f k1 k2 k3 k4 dm) m
 
 -- | /O(log n)/. Change a value at a specific key with access to the key itself,
 --   or do nothing if the key is missing.
@@ -973,29 +982,29 @@ adjustWithKey1 f = adjustWithKey (fmap . f)
 --   or do nothing if the key is missing.
 adjustWithKey2 :: (Ord k0, Ord k1) => (k0 -> k1 -> v -> v) -> k0 -> k1 -> DeepMap '[k0, k1] v -> DeepMap '[k0, k1] v
 adjustWithKey2 f k0 k1 m = case m @? k0 of
-    Nothing -> m
-    Just dm -> overwrite k0 (adjustWithKey1 (f k0) k1 dm) m
+  Nothing -> m
+  Just dm -> overwrite k0 (adjustWithKey1 (f k0) k1 dm) m
 
 -- | /O(log n)/. Change a value at a specific key with access to the key itself,
 --   or do nothing if the key is missing.
 adjustWithKey3 :: (Ord k0, Ord k1, Ord k2) => (k0 -> k1 -> k2 -> v -> v) -> k0 -> k1 -> k2 -> DeepMap '[k0, k1, k2] v -> DeepMap '[k0, k1, k2] v
 adjustWithKey3 f k0 k1 k2 m = case m @? k0 of
-    Nothing -> m
-    Just dm -> overwrite k0 (adjustWithKey2 (f k0) k1 k2 dm) m
+  Nothing -> m
+  Just dm -> overwrite k0 (adjustWithKey2 (f k0) k1 k2 dm) m
 
 -- | /O(log n)/. Change a value at a specific key with access to the key itself,
 --   or do nothing if the key is missing.
 adjustWithKey4 :: (Ord k0, Ord k1, Ord k2, Ord k3) => (k0 -> k1 -> k2 -> k3 -> v -> v) -> k0 -> k1 -> k2 -> k3 -> DeepMap '[k0, k1, k2, k3] v -> DeepMap '[k0, k1, k2, k3] v
 adjustWithKey4 f k0 k1 k2 k3 m = case m @? k0 of
-    Nothing -> m
-    Just dm -> overwrite k0 (adjustWithKey3 (f k0) k1 k2 k3 dm) m
+  Nothing -> m
+  Just dm -> overwrite k0 (adjustWithKey3 (f k0) k1 k2 k3 dm) m
 
 -- | /O(log n)/. Change a value at a specific key with access to the key itself,
 --   or do nothing if the key is missing.
 adjustWithKey5 :: (Ord k0, Ord k1, Ord k2, Ord k3, Ord k4) => (k0 -> k1 -> k2 -> k3 -> k4 -> v -> v) -> k0 -> k1 -> k2 -> k3 -> k4 -> DeepMap '[k0, k1, k2, k3, k4] v -> DeepMap '[k0, k1, k2, k3, k4] v
 adjustWithKey5 f k0 k1 k2 k3 k4 m = case m @? k0 of
-    Nothing -> m
-    Just dm -> overwrite k0 (adjustWithKey4 (f k0) k1 k2 k3 k4 dm) m
+  Nothing -> m
+  Just dm -> overwrite k0 (adjustWithKey4 (f k0) k1 k2 k3 k4 dm) m
 
 -- | /O(log n)/. Change a 'DeepMap' at a specific key. If the function evaluates to 'Nothing',
 --   the key and submap are removed. If the key is missing, do nothing.
@@ -1011,29 +1020,29 @@ update1 f = update (traverse f)
 --   the key and submap are removed. If the key is missing, do nothing.
 update2 :: (Ord k0, Ord k1) => (v -> Maybe v) -> k0 -> k1 -> DeepMap '[k0, k1] v -> DeepMap '[k0, k1] v
 update2 f k0 k1 m = case m @? k0 of
-    Nothing -> m
-    Just dm -> overwrite k0 (update1 f k1 dm) m
+  Nothing -> m
+  Just dm -> overwrite k0 (update1 f k1 dm) m
 
 -- | /O(log n)/. Change a 'DeepMap' at a specific key. If the function evaluates to 'Nothing',
 --   the key and submap are removed. If the key is missing, do nothing.
 update3 :: (Ord k0, Ord k1, Ord k2) => (v -> Maybe v) -> k0 -> k1 -> k2 -> DeepMap '[k0, k1, k2] v -> DeepMap '[k0, k1, k2] v
 update3 f k0 k1 k2 m = case m @? k0 of
-    Nothing -> m
-    Just dm -> overwrite k0 (update2 f k1 k2 dm) m
+  Nothing -> m
+  Just dm -> overwrite k0 (update2 f k1 k2 dm) m
 
 -- | /O(log n)/. Change a 'DeepMap' at a specific key. If the function evaluates to 'Nothing',
 --   the key and submap are removed. If the key is missing, do nothing.
 update4 :: (Ord k0, Ord k1, Ord k2, Ord k3) => (v -> Maybe v) -> k0 -> k1 -> k2 -> k3 -> DeepMap '[k0, k1, k2, k3] v -> DeepMap '[k0, k1, k2, k3] v
 update4 f k0 k1 k2 k3 m = case m @? k0 of
-    Nothing -> m
-    Just dm -> overwrite k0 (update3 f k1 k2 k3 dm) m
+  Nothing -> m
+  Just dm -> overwrite k0 (update3 f k1 k2 k3 dm) m
 
 -- | /O(log n)/. Change a 'DeepMap' at a specific key. If the function evaluates to 'Nothing',
 --   the key and submap are removed. If the key is missing, do nothing.
 update5 :: (Ord k0, Ord k1, Ord k2, Ord k3, Ord k4) => (v -> Maybe v) -> k0 -> k1 -> k2 -> k3 -> k4 -> DeepMap '[k0, k1, k2, k3, k4] v -> DeepMap '[k0, k1, k2, k3, k4] v
 update5 f k0 k1 k2 k3 k4 m = case m @? k0 of
-    Nothing -> m
-    Just dm -> overwrite k0 (update4 f k1 k2 k3 k4 dm) m
+  Nothing -> m
+  Just dm -> overwrite k0 (update4 f k1 k2 k3 k4 dm) m
 
 -- | /O(log n)/. Change a 'DeepMap' at a specific key, with access to the key itself.
 --   If the function evaluates to 'Nothing', the key and submap are removed.
@@ -1052,32 +1061,32 @@ updateWithKey1 f = updateWithKey (traverse . f)
 --   If the keys are missing, do nothing.
 updateWithKey2 :: (Ord k0, Ord k1) => (k0 -> k1 -> v -> Maybe v) -> k0 -> k1 -> DeepMap '[k0, k1] v -> DeepMap '[k0, k1] v
 updateWithKey2 f k0 k1 m = case m @? k0 of
-    Nothing -> m
-    Just dm -> overwrite k0 (updateWithKey1 (f k0) k1 dm) m
+  Nothing -> m
+  Just dm -> overwrite k0 (updateWithKey1 (f k0) k1 dm) m
 
 -- | /O(log n)/. Change a value at specific keys with access to the keys themselves.
 --   If the function evaluates to 'Nothing', the keys and value are removed.
 --   If the keys are missing, do nothing.
 updateWithKey3 :: (Ord k0, Ord k1, Ord k2) => (k0 -> k1 -> k2 -> v -> Maybe v) -> k0 -> k1 -> k2 -> DeepMap '[k0, k1, k2] v -> DeepMap '[k0, k1, k2] v
 updateWithKey3 f k0 k1 k2 m = case m @? k0 of
-    Nothing -> m
-    Just dm -> overwrite k0 (updateWithKey2 (f k0) k1 k2 dm) m
+  Nothing -> m
+  Just dm -> overwrite k0 (updateWithKey2 (f k0) k1 k2 dm) m
 
 -- | /O(log n)/. Change a value at specific keys with access to the keys themselves.
 --   If the function evaluates to 'Nothing', the keys and value are removed.
 --   If the keys are missing, do nothing.
 updateWithKey4 :: (Ord k0, Ord k1, Ord k2, Ord k3) => (k0 -> k1 -> k2 -> k3 -> v -> Maybe v) -> k0 -> k1 -> k2 -> k3 -> DeepMap '[k0, k1, k2, k3] v -> DeepMap '[k0, k1, k2, k3] v
 updateWithKey4 f k0 k1 k2 k3 m = case m @? k0 of
-    Nothing -> m
-    Just dm -> overwrite k0 (updateWithKey3 (f k0) k1 k2 k3 dm) m
+  Nothing -> m
+  Just dm -> overwrite k0 (updateWithKey3 (f k0) k1 k2 k3 dm) m
 
 -- | /O(log n)/. Change a value at specific keys with access to the keys themselves.
 --   If the function evaluates to 'Nothing', the keys and value are removed.
 --   If the keys are missing, do nothing.
 updateWithKey5 :: (Ord k0, Ord k1, Ord k2, Ord k3, Ord k4) => (k0 -> k1 -> k2 -> k3 -> k4 -> v -> Maybe v) -> k0 -> k1 -> k2 -> k3 -> k4 -> DeepMap '[k0, k1, k2, k3, k4] v -> DeepMap '[k0, k1, k2, k3, k4] v
 updateWithKey5 f k0 k1 k2 k3 k4 m = case m @? k0 of
-    Nothing -> m
-    Just dm -> overwrite k0 (updateWithKey4 (f k0) k1 k2 k3 k4 dm) m
+  Nothing -> m
+  Just dm -> overwrite k0 (updateWithKey4 (f k0) k1 k2 k3 k4 dm) m
 
 -- | /O(log n)/. Combines change and retrieval.
 --
@@ -1116,26 +1125,26 @@ alter1 f = alter (fmap Bare . f . fmap getBare)
 -- | /O(log n)/. Can be used to 'insert', 'overwrite', 'delete', or 'update' a value.
 alter2 :: (Ord k0, Ord k1) => (Maybe v -> Maybe v) -> k0 -> k1 -> DeepMap '[k0, k1] v -> DeepMap '[k0, k1] v
 alter2 f k0 k1 m = case f $ m @? k0 @??| k1 of
-    Nothing -> delete2 k0 k1 m
-    Just v -> overwrite2 k0 k1 v m
+  Nothing -> delete2 k0 k1 m
+  Just v -> overwrite2 k0 k1 v m
 
 -- | /O(log n)/. Can be used to 'insert', 'overwrite', 'delete', or 'update' a value.
 alter3 :: (Ord k0, Ord k1, Ord k2) => (Maybe v -> Maybe v) -> k0 -> k1 -> k2 -> DeepMap '[k0, k1, k2] v -> DeepMap '[k0, k1, k2] v
 alter3 f k0 k1 k2 m = case f $ m @? k0 @?? k1 @??| k2 of
-    Nothing -> delete3 k0 k1 k2 m
-    Just v -> overwrite3 k0 k1 k2 v m
+  Nothing -> delete3 k0 k1 k2 m
+  Just v -> overwrite3 k0 k1 k2 v m
 
 -- | /O(log n)/. Can be used to 'insert', 'overwrite', 'delete', or 'update' a value.
 alter4 :: (Ord k0, Ord k1, Ord k2, Ord k3) => (Maybe v -> Maybe v) -> k0 -> k1 -> k2 -> k3 -> DeepMap '[k0, k1, k2, k3] v -> DeepMap '[k0, k1, k2, k3] v
 alter4 f k0 k1 k2 k3 m = case f $ m @? k0 @?? k1 @?? k2 @??| k3 of
-    Nothing -> delete4 k0 k1 k2 k3 m
-    Just v -> overwrite4 k0 k1 k2 k3 v m
+  Nothing -> delete4 k0 k1 k2 k3 m
+  Just v -> overwrite4 k0 k1 k2 k3 v m
 
 -- | /O(log n)/. Can be used to 'insert', 'overwrite', 'delete', or 'update' a value.
 alter5 :: (Ord k0, Ord k1, Ord k2, Ord k3, Ord k4) => (Maybe v -> Maybe v) -> k0 -> k1 -> k2 -> k3 -> k4 -> DeepMap '[k0, k1, k2, k3, k4] v -> DeepMap '[k0, k1, k2, k3, k4] v
 alter5 f k0 k1 k2 k3 k4 m = case f $ m @? k0 @?? k1 @?? k2 @?? k3 @??| k4 of
-    Nothing -> delete5 k0 k1 k2 k3 k4 m
-    Just v -> overwrite5 k0 k1 k2 k3 k4 v m
+  Nothing -> delete5 k0 k1 k2 k3 k4 m
+  Just v -> overwrite5 k0 k1 k2 k3 k4 v m
 
 alterF :: (Functor f, Ord k) => (Maybe (DeepMap ks v) -> f (Maybe (DeepMap ks v))) -> k -> DeepMap (k ': ks) v -> f (DeepMap (k ': ks) v)
 alterF f k (Nest m) = Nest <$> Map.alterF f k m
@@ -1145,27 +1154,27 @@ alterF1 f = alterF (fmap (fmap Bare) . f . fmap getBare)
 
 alterF2 :: (Functor f, Ord k0, Ord k1) => (Maybe v -> f (Maybe v)) -> k0 -> k1 -> DeepMap '[k0, k1] v -> f (DeepMap '[k0, k1] v)
 alterF2 f k0 k1 m =
-    f (m @? k0 @??| k1) <&> \case
-        Nothing -> delete2 k0 k1 m
-        Just v -> overwrite2 k0 k1 v m
+  f (m @? k0 @??| k1) <&> \case
+    Nothing -> delete2 k0 k1 m
+    Just v -> overwrite2 k0 k1 v m
 
 alterF3 :: (Functor f, Ord k0, Ord k1, Ord k2) => (Maybe v -> f (Maybe v)) -> k0 -> k1 -> k2 -> DeepMap '[k0, k1, k2] v -> f (DeepMap '[k0, k1, k2] v)
 alterF3 f k0 k1 k2 m =
-    f (m @? k0 @?? k1 @??| k2) <&> \case
-        Nothing -> delete3 k0 k1 k2 m
-        Just v -> overwrite3 k0 k1 k2 v m
+  f (m @? k0 @?? k1 @??| k2) <&> \case
+    Nothing -> delete3 k0 k1 k2 m
+    Just v -> overwrite3 k0 k1 k2 v m
 
 alterF4 :: (Functor f, Ord k0, Ord k1, Ord k2, Ord k3) => (Maybe v -> f (Maybe v)) -> k0 -> k1 -> k2 -> k3 -> DeepMap '[k0, k1, k2, k3] v -> f (DeepMap '[k0, k1, k2, k3] v)
 alterF4 f k0 k1 k2 k3 m =
-    f (m @? k0 @?? k1 @?? k2 @??| k3) <&> \case
-        Nothing -> delete4 k0 k1 k2 k3 m
-        Just v -> overwrite4 k0 k1 k2 k3 v m
+  f (m @? k0 @?? k1 @?? k2 @??| k3) <&> \case
+    Nothing -> delete4 k0 k1 k2 k3 m
+    Just v -> overwrite4 k0 k1 k2 k3 v m
 
 alterF5 :: (Functor f, Ord k0, Ord k1, Ord k2, Ord k3, Ord k4) => (Maybe v -> f (Maybe v)) -> k0 -> k1 -> k2 -> k3 -> k4 -> DeepMap '[k0, k1, k2, k3, k4] v -> f (DeepMap '[k0, k1, k2, k3, k4] v)
 alterF5 f k0 k1 k2 k3 k4 m =
-    f (m @? k0 @?? k1 @?? k2 @?? k3 @??| k4) <&> \case
-        Nothing -> delete5 k0 k1 k2 k3 k4 m
-        Just v -> overwrite5 k0 k1 k2 k3 k4 v m
+  f (m @? k0 @?? k1 @?? k2 @?? k3 @??| k4) <&> \case
+    Nothing -> delete5 k0 k1 k2 k3 k4 m
+    Just v -> overwrite5 k0 k1 k2 k3 k4 v m
 
 -- | /O(log n)/. Lookup the value at a key.
 lookup :: (Ord k) => k -> DeepMap (k ': ks) v -> Maybe (DeepMap ks v)
@@ -1865,8 +1874,8 @@ restrictKeys2 m s = mapShallow (\dm -> restrictKeys dm (Set.map snd s)) $ restri
 -- | /O(m log(n \/ m + 1)), m <= n/. Restrict a 'Map' to only the keys in a given 'Set'.
 restrictKeys3 :: (Ord k0, Ord k1, Ord k2) => DeepMap (k0 ': k1 ': k2 ': ks) v -> Set (k0, k1, k2) -> DeepMap (k0 ': k1 ': k2 ': ks) v
 restrictKeys3 m s =
-    mapShallow (\dm -> restrictKeys2 dm (Set.map (\(_, b, c) -> (b, c)) s)) $
-        restrictKeys m (Set.map (\(a, _, _) -> a) s)
+  mapShallow (\dm -> restrictKeys2 dm (Set.map (\(_, b, c) -> (b, c)) s)) $
+    restrictKeys m (Set.map (\(a, _, _) -> a) s)
 
 -- | /O(m log(n \/ m + 1)), m <= n/. Restrict a 'Map' to only the keys in a given 'Set'.
 restrictKeys4 :: (Ord k0, Ord k1, Ord k2, Ord k3) => DeepMap (k0 ': k1 ': k2 ': k3 ': ks) v -> Set (k0, k1, k2, k3) -> DeepMap (k0 ': k1 ': k2 ': k3 ': ks) v
@@ -1979,26 +1988,26 @@ mapMaybeWithKey1 f = mapShallowMaybeWithKey (\k -> fmap Bare . f k . getBare)
 -- | /O(n)/. Map values and collect the 'Just' results.
 mapMaybeWithKey2 :: (k0 -> k1 -> v -> Maybe w) -> DeepMap '[k0, k1] v -> DeepMap '[k0, k1] w
 mapMaybeWithKey2 f m =
-    let g k0 k1 v = Identity $ f k0 k1 v
-     in runIdentity $ traverseMaybeWithKey (fmap (fmap Just) . traverseMaybeWithKey1 . g) m
+  let g k0 k1 v = Identity $ f k0 k1 v
+   in runIdentity $ traverseMaybeWithKey (fmap (fmap Just) . traverseMaybeWithKey1 . g) m
 
 -- | /O(n)/. Map values and collect the 'Just' results.
 mapMaybeWithKey3 :: (k0 -> k1 -> k2 -> v -> Maybe w) -> DeepMap '[k0, k1, k2] v -> DeepMap '[k0, k1, k2] w
 mapMaybeWithKey3 f m =
-    let g k0 k1 k2 v = Identity $ f k0 k1 k2 v
-     in runIdentity $ traverseMaybeWithKey (fmap (fmap Just) . traverseMaybeWithKey2 . g) m
+  let g k0 k1 k2 v = Identity $ f k0 k1 k2 v
+   in runIdentity $ traverseMaybeWithKey (fmap (fmap Just) . traverseMaybeWithKey2 . g) m
 
 -- | /O(n)/. Map values and collect the 'Just' results.
 mapMaybeWithKey4 :: (k0 -> k1 -> k2 -> k3 -> v -> Maybe w) -> DeepMap '[k0, k1, k2, k3] v -> DeepMap '[k0, k1, k2, k3] w
 mapMaybeWithKey4 f m =
-    let g k0 k1 k2 k3 v = Identity $ f k0 k1 k2 k3 v
-     in runIdentity $ traverseMaybeWithKey (fmap (fmap Just) . traverseMaybeWithKey3 . g) m
+  let g k0 k1 k2 k3 v = Identity $ f k0 k1 k2 k3 v
+   in runIdentity $ traverseMaybeWithKey (fmap (fmap Just) . traverseMaybeWithKey3 . g) m
 
 -- | /O(n)/. Map values and collect the 'Just' results.
 mapMaybeWithKey5 :: (k0 -> k1 -> k2 -> k3 -> k4 -> v -> Maybe w) -> DeepMap '[k0, k1, k2, k3, k4] v -> DeepMap '[k0, k1, k2, k3, k4] w
 mapMaybeWithKey5 f m =
-    let g k0 k1 k2 k3 k4 v = Identity $ f k0 k1 k2 k3 k4 v
-     in runIdentity $ traverseMaybeWithKey (fmap (fmap Just) . traverseMaybeWithKey4 . g) m
+  let g k0 k1 k2 k3 k4 v = Identity $ f k0 k1 k2 k3 k4 v
+   in runIdentity $ traverseMaybeWithKey (fmap (fmap Just) . traverseMaybeWithKey4 . g) m
 
 -- | /O(n)/. Map values and collect the 'Left' and 'Right' results separately.
 mapEither :: (v -> Either w x) -> DeepMap (k ': ks) v -> (DeepMap (k ': ks) w, DeepMap (k ': ks) x)
@@ -2019,41 +2028,41 @@ mapEitherWithKey1 f (Nest m) = Nest *** Nest $ Map.mapEitherWithKey (\k -> (Bare
 -- | /O(n)/. Map values and collect the 'Left' and 'Right' results separately.
 mapEitherWithKey2 :: (k0 -> k1 -> v -> Either w x) -> DeepMap '[k0, k1] v -> (DeepMap '[k0, k1] w, DeepMap '[k0, k1] x)
 mapEitherWithKey2 f m =
-    (mapMaybe (Just ||| const Nothing) *** mapMaybe (const Nothing ||| Just)) . partition2 isLeft $
-        mapShallowWithKey (\k0 -> mapShallowWithKey $ fmap . f k0) m
+  (mapMaybe (Just ||| const Nothing) *** mapMaybe (const Nothing ||| Just)) . partition2 isLeft $
+    mapShallowWithKey (\k0 -> mapShallowWithKey $ fmap . f k0) m
 
 -- | /O(n)/. Map values and collect the 'Left' and 'Right' results separately.
 mapEitherWithKey3 :: (k0 -> k1 -> k2 -> v -> Either w x) -> DeepMap '[k0, k1, k2] v -> (DeepMap '[k0, k1, k2] w, DeepMap '[k0, k1, k2] x)
 mapEitherWithKey3 f m =
-    (mapMaybe (Just ||| const Nothing) *** mapMaybe (const Nothing ||| Just)) . partition3 isLeft $
-        mapShallowWithKey
-            ( \k0 -> mapShallowWithKey $ \k1 ->
-                mapShallowWithKey $ fmap . f k0 k1
-            )
-            m
+  (mapMaybe (Just ||| const Nothing) *** mapMaybe (const Nothing ||| Just)) . partition3 isLeft $
+    mapShallowWithKey
+      ( \k0 -> mapShallowWithKey $ \k1 ->
+          mapShallowWithKey $ fmap . f k0 k1
+      )
+      m
 
 -- | /O(n)/. Map values and collect the 'Left' and 'Right' results separately.
 mapEitherWithKey4 :: (k0 -> k1 -> k2 -> k3 -> v -> Either w x) -> DeepMap '[k0, k1, k2, k3] v -> (DeepMap '[k0, k1, k2, k3] w, DeepMap '[k0, k1, k2, k3] x)
 mapEitherWithKey4 f m =
-    (mapMaybe (Just ||| const Nothing) *** mapMaybe (const Nothing ||| Just)) . partition4 isLeft $
-        mapShallowWithKey
-            ( \k0 -> mapShallowWithKey $ \k1 ->
-                mapShallowWithKey $ \k2 ->
-                    mapShallowWithKey $ fmap . f k0 k1 k2
-            )
-            m
+  (mapMaybe (Just ||| const Nothing) *** mapMaybe (const Nothing ||| Just)) . partition4 isLeft $
+    mapShallowWithKey
+      ( \k0 -> mapShallowWithKey $ \k1 ->
+          mapShallowWithKey $ \k2 ->
+            mapShallowWithKey $ fmap . f k0 k1 k2
+      )
+      m
 
 -- | /O(n)/. Map values and collect the 'Left' and 'Right' results separately.
 mapEitherWithKey5 :: (k0 -> k1 -> k2 -> k3 -> k4 -> v -> Either w x) -> DeepMap '[k0, k1, k2, k3, k4] v -> (DeepMap '[k0, k1, k2, k3, k4] w, DeepMap '[k0, k1, k2, k3, k4] x)
 mapEitherWithKey5 f m =
-    (mapMaybe (Just ||| const Nothing) *** mapMaybe (const Nothing ||| Just)) . partition5 isLeft $
-        mapShallowWithKey
-            ( \k0 -> mapShallowWithKey $ \k1 ->
-                mapShallowWithKey $ \k2 ->
-                    mapShallowWithKey $ \k3 ->
-                        mapShallowWithKey $ fmap . f k0 k1 k2 k3
-            )
-            m
+  (mapMaybe (Just ||| const Nothing) *** mapMaybe (const Nothing ||| Just)) . partition5 isLeft $
+    mapShallowWithKey
+      ( \k0 -> mapShallowWithKey $ \k1 ->
+          mapShallowWithKey $ \k2 ->
+            mapShallowWithKey $ \k3 ->
+              mapShallowWithKey $ fmap . f k0 k1 k2 k3
+      )
+      m
 
 -- | /O(log n)/. Partition the map by comparing keys ((smaller, larger) than given).
 split :: (Ord k) => k -> DeepMap (k ': ks) v -> (DeepMap (k ': ks) v, DeepMap (k ': ks) v)
