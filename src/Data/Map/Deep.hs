@@ -1,8 +1,6 @@
-{-# LANGUAGE UndecidableInstances #-}
-
 -- |
 -- Module       : Data.Map.Deep
--- Copyright    : (c) Melanie Brown 2021
+-- Copyright    : (c) Melanie Brown 2021-2023
 -- License      : BSD3 (see the file LICENSE)
 -- Maintainer   : brown.m@pm.me
 --
@@ -20,11 +18,13 @@ module Data.Map.Deep
     -- * Construction
   , empty
   , singleton
+  , deep
   , (@>)
   , (@|)
 
     -- ** From Unordered Lists
   , fromList
+  , fromListDeep
   , fromList1
   , fromList2
   , fromList3
@@ -45,6 +45,7 @@ module Data.Map.Deep
 
     -- * Insertion
   , insert
+  , insertDeep
   , insert1
   , insert2
   , insert3
@@ -69,12 +70,14 @@ module Data.Map.Deep
   , insertLookupWithKey4
   , insertLookupWithKey5
   , overwrite
+  , overwriteDeep
   , overwrite1
   , overwrite2
   , overwrite3
   , overwrite4
   , overwrite5
   , overwriteLookup
+  , overwriteLookupDeep
   , overwriteLookup1
   , overwriteLookup2
   , overwriteLookup3
@@ -83,12 +86,14 @@ module Data.Map.Deep
 
     -- * Deletion\/Update
   , delete
+  , deleteDeep
   , delete1
   , delete2
   , delete3
   , delete4
   , delete5
   , adjust
+  , adjustDeep
   , adjust1
   , adjust2
   , adjust3
@@ -101,6 +106,7 @@ module Data.Map.Deep
   , adjustWithKey4
   , adjustWithKey5
   , update
+  , updateDeep
   , update1
   , update2
   , update3
@@ -119,12 +125,14 @@ module Data.Map.Deep
   , updateLookupWithKey4
   , updateLookupWithKey5
   , alter
+  , alterDeep
   , alter1
   , alter2
   , alter3
   , alter4
   , alter5
   , alterF
+  , alterFDeep
   , alterF1
   , alterF2
   , alterF3
@@ -135,6 +143,7 @@ module Data.Map.Deep
 
     -- ** Lookup
   , lookup
+  , lookupDeep
   , (@?)
   , (@?|)
   , (@??)
@@ -237,6 +246,7 @@ module Data.Map.Deep
   , mapAccumRWithKey4
   , mapAccumRWithKey5
   , mapKeys
+  , mapKeysDeep
   , mapKeys1
   , mapKeys2
   , mapKeys3
@@ -249,6 +259,7 @@ module Data.Map.Deep
   , mapKeysWith4
   , mapKeysWith5
   , traverseKeys
+  , traverseKeysDeep
   , traverseKeysWith
   , mapKeysM
   , mapKeysM1
@@ -415,6 +426,14 @@ module Data.Map.Deep
   , maxView
   , minViewWithKey
   , maxViewWithKey
+
+    -- * Deep
+  , Deep
+  , pattern Deep1
+  , pattern Deep2
+  , pattern Deep3
+  , pattern Deep4
+  , pattern Deep5
   )
 where
 
@@ -423,12 +442,12 @@ import Data.Bool (bool)
 import Data.Data
 import Data.Either (isLeft)
 import Data.Foldable (Foldable (fold, foldl', foldr', toList))
-import Data.Foldable.WithIndex (FoldableWithIndex)
+import Data.Foldable.WithIndex
 import Data.Functor ((<&>))
 import Data.Functor.Compose (Compose (..))
 import Data.Functor.Const (Const (..))
 import Data.Functor.Identity (Identity (..))
-import Data.Functor.WithIndex (FunctorWithIndex)
+import Data.Functor.WithIndex
 import Data.Kind (Type)
 import Data.Map.Strict (Map)
 import Data.Map.Strict qualified as Map
@@ -449,18 +468,25 @@ import Prelude hiding
 
 data DeepMap (ks :: [Type]) (v :: Type) :: Type where
   Bare :: {getBare :: v} -> DeepMap '[] v
-  Nest :: {getNest :: Map k (DeepMap ks v)} -> DeepMap (k ': ks) v
+  Nest :: (Ord k) => {getNest :: Map k (DeepMap ks v)} -> DeepMap (k ': ks) v
 
 instance (Eq v) => Eq (DeepMap '[] v) where
+  (==) :: (Eq v) => DeepMap '[] v -> DeepMap '[] v -> Bool
   Bare v1 == Bare v2 = v1 == v2
 
 instance (Eq k, Eq (DeepMap ks v)) => Eq (DeepMap (k ': ks) v) where
+  (==) ::
+    (Eq k, Eq (DeepMap ks v)) =>
+    (DeepMap (k : ks) v -> DeepMap (k : ks) v -> Bool)
   Nest v1 == Nest v2 = v1 == v2
 
 instance (Ord v) => Ord (DeepMap '[] v) where
+  (<=) :: (Ord v) => DeepMap '[] v -> DeepMap '[] v -> Bool
   Bare v1 <= Bare v2 = v1 <= v2
 
 instance (Ord k, Ord (DeepMap ks v)) => Ord (DeepMap (k ': ks) v) where
+  (<=) ::
+    (Ord k, Ord (DeepMap ks v)) => DeepMap (k : ks) v -> DeepMap (k : ks) v -> Bool
   Nest v1 <= Nest v2 = v1 <= v2
 
 instance (Show v) => Show (DeepMap '[] v) where
@@ -472,7 +498,10 @@ instance (Show k, Show (DeepMap ks v)) => Show (DeepMap (k ': ks) v) where
 instance (Semigroup v) => Semigroup (DeepMap '[] v) where
   (<>) = onBare2 (<>)
 
-instance (Ord k, Semigroup (DeepMap ks v)) => Semigroup (DeepMap (k ': ks) v) where
+instance
+  (Ord k, Semigroup (DeepMap ks v)) =>
+  Semigroup (DeepMap (k ': ks) v)
+  where
   (<>) = onNest2 $ Map.unionWith (<>)
 
 instance (Monoid v) => Monoid (DeepMap '[] v) where
@@ -487,26 +516,66 @@ deriving instance Foldable (DeepMap ks)
 
 deriving instance Traversable (DeepMap ks)
 
-instance FunctorWithIndex () (DeepMap '[])
+-- | For use with indexed maps, folds, and traversals.
+type Deep :: [Type] -> Type
+data Deep ks where
+  Deep0 :: Deep '[]
+  Deep1 :: (Ord k) => k -> Deep ks -> Deep (k ': ks)
 
-instance FoldableWithIndex () (DeepMap '[])
+deriving instance Eq (Deep '[])
 
-instance TraversableWithIndex () (DeepMap '[]) where
-  itraverse f (Bare v) = Bare <$> f () v
+deriving instance Ord (Deep '[])
 
-instance
-  (TraversableWithIndex ki (DeepMap ks)) =>
-  FunctorWithIndex (k, ki) (DeepMap (k ': ks))
+deriving instance Show (Deep '[])
 
-instance
-  (TraversableWithIndex ki (DeepMap ks)) =>
-  FoldableWithIndex (k, ki) (DeepMap (k ': ks))
+deriving instance (Eq k, Eq (Deep ks)) => Eq (Deep (k ': ks))
 
-instance
-  (TraversableWithIndex ki (DeepMap ks)) =>
-  TraversableWithIndex (k, ki) (DeepMap (k ': ks))
-  where
-  itraverse f = traverseShallowWithKey (itraverse . curry f)
+deriving instance (Ord k, Ord (Deep ks)) => Ord (Deep (k ': ks))
+
+pattern Deep2 ::
+  (Ord k0, Ord k1) =>
+  (k0 -> k1 -> Deep ks -> Deep (k0 ': k1 ': ks))
+pattern Deep2 k0 k1 ks = Deep1 k0 (Deep1 k1 ks)
+
+{-# COMPLETE Deep2 #-}
+
+pattern Deep3 ::
+  (Ord k0, Ord k1, Ord k2) =>
+  (k0 -> k1 -> k2 -> Deep ks -> Deep (k0 ': k1 ': k2 ': ks))
+pattern Deep3 k0 k1 k2 ks = Deep1 k0 (Deep2 k1 k2 ks)
+
+{-# COMPLETE Deep3 #-}
+
+pattern Deep4 ::
+  (Ord k0, Ord k1, Ord k2, Ord k3) =>
+  (k0 -> k1 -> k2 -> k3 -> Deep ks -> Deep (k0 ': k1 ': k2 ': k3 ': ks))
+pattern Deep4 k0 k1 k2 k3 ks = Deep1 k0 (Deep3 k1 k2 k3 ks)
+
+{-# COMPLETE Deep4 #-}
+
+pattern Deep5 ::
+  (Ord k0, Ord k1, Ord k2, Ord k3, Ord k4) =>
+  k0 ->
+  k1 ->
+  k2 ->
+  k3 ->
+  k4 ->
+  (Deep ks -> Deep (k0 ': k1 ': k2 ': k3 ': k4 ': ks))
+pattern Deep5 k0 k1 k2 k3 k4 ks = Deep1 k0 (Deep4 k1 k2 k3 k4 ks)
+
+{-# COMPLETE Deep5 #-}
+
+instance FunctorWithIndex (Deep ks) (DeepMap ks)
+
+instance FoldableWithIndex (Deep ks) (DeepMap ks)
+
+instance (TraversableWithIndex (Deep ks) (DeepMap ks)) where
+  itraverse ::
+    (Applicative f) =>
+    ((Deep ks -> a -> f b) -> DeepMap ks a -> f (DeepMap ks b))
+  itraverse f = \case
+    Bare v -> Bare <$> f Deep0 v
+    Nest m -> Nest <$> itraverse (itraverse . (f .) . Deep1) m
 
 deriving instance (Typeable v) => Typeable (DeepMap '[] v)
 
@@ -521,26 +590,77 @@ conBare = mkConstr tyDeepMap "Bare" [] Data.Data.Prefix
 conNest = mkConstr tyDeepMap "Nest" [] Data.Data.Prefix
 
 instance (Data v) => Data (DeepMap '[] v) where
+  dataTypeOf :: (Data v) => DeepMap '[] v -> DataType
   dataTypeOf _ = tyDeepMap
+  toConstr :: (Data v) => DeepMap '[] v -> Constr
   toConstr (Bare _) = conBare
+  gunfold ::
+    (Data v) =>
+    (forall b r. (Data b) => c (b -> r) -> c r) ->
+    (forall r. r -> c r) ->
+    Constr ->
+    c (DeepMap '[] v)
   gunfold k z _ = k (z Bare)
 
 instance
-  (Ord k, Data k, Typeable ks, Typeable v, Data (DeepMap ks v)) =>
+  ( Ord k
+  , Data k
+  , Typeable ks
+  , Typeable v
+  , Data (DeepMap ks v)
+  ) =>
   Data (DeepMap (k ': ks) v)
   where
+  dataTypeOf ::
+    ( Ord k
+    , Data k
+    , Typeable ks
+    , Typeable v
+    , Data (DeepMap ks v)
+    ) =>
+    (DeepMap (k : ks) v -> DataType)
   dataTypeOf _ = tyDeepMap
+  toConstr ::
+    ( Ord k
+    , Data k
+    , Typeable ks
+    , Typeable v
+    , Data (DeepMap ks v)
+    ) =>
+    (DeepMap (k : ks) v -> Constr)
   toConstr (Nest _) = conNest
+  gunfold ::
+    ( Ord k
+    , Data k
+    , Typeable ks
+    , Typeable v
+    , Data (DeepMap ks v)
+    ) =>
+    (forall b r. (Data b) => c (b -> r) -> c r) ->
+    (forall r. r -> c r) ->
+    Constr ->
+    c (DeepMap (k : ks) v)
   gunfold k z _ = k (z Nest)
 
 instance (Generic v) => Generic (DeepMap '[] v) where
   type Rep (DeepMap '[] v) = Const v
+  from :: (Generic v) => DeepMap '[] v -> Const v x
   from (Bare v) = Const v
+  to :: (Generic v) => Const v x -> DeepMap '[] v
   to (Const v) = Bare v
 
-instance (Ord k, Generic k, Generic (DeepMap ks v)) => Generic (DeepMap (k ': ks) v) where
+instance
+  (Ord k, Generic k, Generic (DeepMap ks v)) =>
+  Generic (DeepMap (k ': ks) v)
+  where
   type Rep (DeepMap (k ': ks) v) = Compose [] (Const k :*: Rep (DeepMap ks v))
+  from ::
+    (Ord k, Generic k, Generic (DeepMap ks v)) =>
+    (DeepMap (k : ks) v -> Rep (DeepMap (k : ks) v) x)
   from m = Compose $ (\(k, dm) -> Const k :*: from dm) <$> assocs m
+  to ::
+    (Ord k, Generic k, Generic (DeepMap ks v)) =>
+    (Rep (DeepMap (k : ks) v) x -> DeepMap (k : ks) v)
   to (Compose kvs) = Nest . Map.fromList $ (\(Const k :*: dm') -> (k, to dm')) <$> kvs
 
 -- | Apply a two-argument function through a shallow 'DeepMap', akin to 'liftA2'.
@@ -569,7 +689,7 @@ toMap :: DeepMap (k ': '[]) v -> Map k v
 toMap (Nest m) = getBare <$> m
 
 -- | Half of the isomorphism of a depth-1 'DeepMap' to a 'Data.Map.Strict.Map'. See also 'toMap'.
-fromMap :: Map k v -> DeepMap '[k] v
+fromMap :: (Ord k) => Map k v -> DeepMap '[k] v
 fromMap m = Nest (Bare <$> m)
 
 -- | A singleton 'DeepMap'. Use with '(@|)' to create deep nestings:
@@ -578,7 +698,7 @@ fromMap m = Nest (Bare <$> m)
 -- Nest {fromList [("Outer",Nest {fromList [(0,Bare [5])]})]}
 infixr 6 @>
 
-(@>) :: k -> DeepMap ks v -> DeepMap (k ': ks) v
+(@>) :: (Ord k) => k -> DeepMap ks v -> DeepMap (k ': ks) v
 k @> a = Nest $ Map.singleton k a
 {-# INLINE (@>) #-}
 
@@ -588,16 +708,21 @@ k @> a = Nest $ Map.singleton k a
 -- Nest {fromList [("Outer",Nest {fromList [(0,Bare [5])]})]}
 infixr 6 @|
 
-(@|) :: k -> v -> DeepMap '[k] v
+(@|) :: (Ord k) => k -> v -> DeepMap '[k] v
 k @| a = Nest . Map.singleton k $ Bare a
 {-# INLINE (@|) #-}
 
+deep :: Deep ks -> v -> DeepMap ks v
+deep js v = case js of
+  Deep0 -> Bare v
+  Deep1 k ks -> k @> deep ks v
+
 -- | /O(1)/. The empty, arbitrary positive-depth 'DeepMap'.
-empty :: DeepMap (k ': ks) v
+empty :: (Ord k) => DeepMap (k ': ks) v
 empty = Nest Map.empty
 
 -- | /O(1)/. A depth-1 'DeepMap' with a single key/value pair.
-singleton :: k -> v -> DeepMap '[k] v
+singleton :: (Ord k) => k -> v -> DeepMap '[k] v
 singleton k v = Nest . Map.singleton k $ Bare v
 
 -- | /O(n)/. Return all submaps of the map in ascending order of its keys. Subject to list fusion.
@@ -628,8 +753,14 @@ keysSet (Nest m) = Map.keysSet m
 --   If the list contains more than one value for the same key,
 --   the values are combined using '(<>)'.
 fromList ::
-  (Ord k, Semigroup (DeepMap ks v)) => [(k, DeepMap ks v)] -> DeepMap (k ': ks) v
+  (Ord k, Semigroup (DeepMap ks v)) =>
+  ([(k, DeepMap ks v)] -> DeepMap (k ': ks) v)
 fromList kvs = Nest $ Map.fromListWith (flip (<>)) kvs
+
+fromListDeep ::
+  (Monoid (DeepMap ks v)) =>
+  ([(Deep ks, v)] -> DeepMap ks v)
+fromListDeep = foldMap (uncurry deep)
 
 -- | /O(n log n)/. Build a depth-1 'DeepMap' from a list of key/value pairs.
 --   If the list contains more than one value for the same key,
@@ -753,6 +884,14 @@ insert ::
   DeepMap (k ': ks) v
 insert k dm (Nest m) = Nest $ Map.insertWith (flip (<>)) k dm m
 
+insertDeep ::
+  (Ord k, Semigroup (DeepMap ks v)) =>
+  Deep (k ': ks) ->
+  v ->
+  DeepMap (k ': ks) v ->
+  DeepMap (k ': ks) v
+insertDeep (Deep1 k0 ks) = insert k0 . deep ks
+
 -- | /O(log n)/. Insert a new key and value into a depth-1 'DeepMap'. If the key is already
 --   present in the map, the associated value is combined with the new value as @old '<>' new@.
 --   The overwriting behaviour from @containers@ can be recovered
@@ -824,6 +963,14 @@ overwrite ::
   (Ord k) => k -> DeepMap ks v -> DeepMap (k ': ks) v -> DeepMap (k ': ks) v
 overwrite k v (Nest m) = Nest $ Map.insert k v m
 
+overwriteDeep ::
+  (Ord k, Semigroup (DeepMap ks v)) =>
+  Deep (k ': ks) ->
+  v ->
+  DeepMap (k ': ks) v ->
+  DeepMap (k ': ks) v
+overwriteDeep (Deep1 k0 ks) = overwrite k0 . deep ks
+
 -- | /O(log n)/. Insert a new key/value pair into a depth-1 'DeepMap'. If the key is already
 --   present in the map, the associated value is replaced by the new value.
 overwrite1 :: (Ord k) => k -> v -> DeepMap '[k] v -> DeepMap '[k] v
@@ -883,6 +1030,14 @@ overwriteLookup ::
   DeepMap (k ': ks) v ->
   (Maybe (DeepMap ks v), DeepMap (k ': ks) v)
 overwriteLookup k v (Nest m) = Nest <$> Map.insertLookupWithKey (const const) k v m
+
+overwriteLookupDeep ::
+  (Ord k, Semigroup (DeepMap ks v)) =>
+  Deep (k ': ks) ->
+  v ->
+  DeepMap (k ': ks) v ->
+  (Maybe (DeepMap ks v), DeepMap (k ': ks) v)
+overwriteLookupDeep (Deep1 k0 ks) = overwriteLookup k0 . deep ks
 
 -- | /O(log n)/. Combines replacement and retrieval at depth 1.
 overwriteLookup1 ::
@@ -1179,6 +1334,17 @@ insertLookupWithKey5 f k0 k1 k2 k3 k4 v m = (m @? k0 @?? k1 @?? k2 @?? k3 @??| k
 delete :: (Ord k) => k -> DeepMap (k ': ks) v -> DeepMap (k ': ks) v
 delete k (Nest m) = Nest $ Map.delete k m
 
+deleteDeep ::
+  (Monoid v) =>
+  Deep ks ->
+  DeepMap ks v ->
+  DeepMap ks v
+deleteDeep = \cases
+  Deep0 _ -> mempty
+  (Deep1 k ks) m -> case m @? k of
+    Nothing -> m
+    Just dm -> overwrite k (deleteDeep ks dm) m
+
 -- | /O(log n)/. Delete a key and its value from the map, or do nothing if the key is missing.
 delete1 :: (Ord k) => k -> DeepMap '[k] v -> DeepMap '[k] v
 delete1 = delete
@@ -1238,6 +1404,11 @@ adjust ::
   DeepMap (k ': ks) v ->
   DeepMap (k ': ks) v
 adjust f k (Nest m) = Nest $ Map.adjust f k m
+
+adjustDeep :: (v -> v) -> Deep ks -> DeepMap ks v -> DeepMap ks v
+adjustDeep f = \cases
+  Deep0 (Bare v) -> Bare (f v)
+  (Deep1 k ks) (Nest m) -> Nest $ Map.adjust (adjustDeep f ks) k m
 
 -- | /O(log n)/. Change a value at a specific key with the result of the provided function,
 --   or do nothing if the key is missing.
@@ -1385,6 +1556,16 @@ update ::
   DeepMap (k ': ks) v ->
   DeepMap (k ': ks) v
 update f k (Nest m) = Nest $ Map.update f k m
+
+updateDeep ::
+  (Monoid v) =>
+  (v -> Maybe v) ->
+  Deep ks ->
+  DeepMap ks v ->
+  DeepMap ks v
+updateDeep f = \cases
+  Deep0 (Bare v) -> maybe mempty Bare (f v)
+  (Deep1 k ks) (Nest m) -> Nest $ Map.adjust (updateDeep f ks) k m
 
 -- | /O(log n)/. Change a 'DeepMap' at a specific key. If the function evaluates to 'Nothing',
 --   the key and submap are removed. If the key is missing, do nothing.
@@ -1604,6 +1785,16 @@ alter ::
   DeepMap (k ': ks) v
 alter f k (Nest m) = Nest $ Map.alter f k m
 
+alterDeep ::
+  (Monoid v) =>
+  (Maybe v -> Maybe v) ->
+  Deep ks ->
+  DeepMap ks v ->
+  DeepMap ks v
+alterDeep f = \cases
+  Deep0 (Bare v) -> maybe mempty Bare (f (Just v))
+  (Deep1 k ks) (Nest m) -> Nest $ Map.adjust (alterDeep f ks) k m
+
 -- | /O(log n)/. Can be used to 'insert', 'overwrite', 'delete', or 'update' a value.
 alter1 ::
   (Ord k) => (Maybe v -> Maybe v) -> k -> DeepMap '[k] v -> DeepMap '[k] v
@@ -1671,6 +1862,16 @@ alterF ::
   f (DeepMap (k ': ks) v)
 alterF f k (Nest m) = Nest <$> Map.alterF f k m
 
+alterFDeep ::
+  (Monoid v, Applicative f) =>
+  (Maybe v -> f (Maybe v)) ->
+  Deep ks ->
+  DeepMap ks v ->
+  f (DeepMap ks v)
+alterFDeep f = \cases
+  Deep0 (Bare v) -> maybe mempty Bare <$> f (Just v)
+  (Deep1 k ks) (Nest m) -> Nest <$> Map.alterF (traverse (alterFDeep f ks)) k m
+
 alterF1 ::
   (Functor f, Ord k) =>
   (Maybe v -> f (Maybe v)) ->
@@ -1736,6 +1937,11 @@ alterF5 f k0 k1 k2 k3 k4 m =
 -- | /O(log n)/. Lookup the value at a key.
 lookup :: (Ord k) => k -> DeepMap (k ': ks) v -> Maybe (DeepMap ks v)
 lookup k (Nest m) = Map.lookup k m
+
+lookupDeep :: Deep ks -> DeepMap ks v -> Maybe v
+lookupDeep = \cases
+  Deep0 (Bare v) -> pure v
+  (Deep1 k ks) m -> lookupDeep ks =<< m @? k
 
 -- | /O(log n)/. Lookup the value at a key.
 lookup1 :: (Ord k) => k -> DeepMap '[k] v -> Maybe v
@@ -2371,6 +2577,13 @@ mapKeys ::
   DeepMap (k ': ks) v
 mapKeys f (Nest m) = Nest $ Map.mapKeysWith (<>) f m
 
+mapKeysDeep ::
+  (Monoid (DeepMap ks v)) =>
+  ((Deep js -> Deep ks) -> DeepMap js v -> DeepMap ks v)
+mapKeysDeep jk = \case
+  Bare v -> deep (jk Deep0) v
+  Nest (m :: Map j (DeepMap js0 v)) -> ifoldMap (mapKeysDeep . (jk .) . Deep1) m
+
 -- | /O(n log n)/. Map a function over the keys of a 'DeepMap'.
 mapKeys1 :: (Ord k, Semigroup v) => (j -> k) -> DeepMap '[j] v -> DeepMap '[k] v
 mapKeys1 = mapKeys
@@ -2489,6 +2702,16 @@ traverseKeys f (Nest m) = Nest <$> traverseKeysMap f m
   traverseKeysMap ::
     (Applicative f, Ord k) => (j -> f k) -> Map j a -> f (Map k a)
   traverseKeysMap f0 = fmap Map.fromList . traverse (\(j, a) -> (,a) <$> f0 j) . Map.assocs
+
+traverseKeysDeep ::
+  forall f js ks v.
+  (Applicative f, Monoid (DeepMap ks v)) =>
+  (Deep js -> f (Deep ks)) ->
+  DeepMap js v ->
+  f (DeepMap ks v)
+traverseKeysDeep f = \case
+  Bare v -> f Deep0 <&> (`deep` v)
+  Nest m -> fold <$> itraverse (traverseKeysDeep . (f .) . Deep1) m
 
 -- | /O(n log n)/. Map an applicative function over the outer keys of the map
 --   and collect the results using the specified combining function.
@@ -3439,4 +3662,4 @@ invertKeys ::
   (Ord j, Ord k, Semigroup (DeepMap ks v)) =>
   DeepMap (j ': k ': ks) v ->
   DeepMap (k ': j ': ks) v
-invertKeys m = fold [k @> j @> mv | (j, mk) <- assocs m, (k, mv) <- assocs mk]
+invertKeys = mapKeysDeep \(Deep2 j k d0) -> Deep2 k j d0
