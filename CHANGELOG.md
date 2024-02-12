@@ -1,4 +1,8 @@
-# Revision history for deep-maps
+# Revision history for deep-map
+
+## 0.2.0.1
+
+* Update copyright and re-trigger Hackage build with newer ghc
 
 ## 0.2.0
 

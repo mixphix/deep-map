@@ -1,6 +1,6 @@
 cabal-version:      3.0
 name:               deep-map
-version:            0.2.0
+version:            0.2.0.1
 category:           Data, Statistics
 synopsis:           Deeply-nested, multiple key type maps.
 description:
@@ -9,7 +9,7 @@ description:
 homepage:           https://github.com/mixphix/deep-map
 bug-reports:        https://github.com/mixphix/deep-map/issues
 license:            BSD-3-Clause
-copyright:          2021 Melanie Brown
+copyright:          2021-2024 Melanie Brown
 author:             Melanie Brown
 maintainer:         brown.m@pm.me
 extra-source-files:

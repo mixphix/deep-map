@@ -1,6 +1,6 @@
 -- |
 -- Module       : Data.Map.Deep
--- Copyright    : (c) Melanie Brown 2021-2023
+-- Copyright    : (c) Melanie Brown 2021-2024
 -- License      : BSD3 (see the file LICENSE)
 -- Maintainer   : brown.m@pm.me
 --
