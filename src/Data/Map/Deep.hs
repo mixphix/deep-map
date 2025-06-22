@@ -435,7 +435,7 @@ module Data.Map.Deep
   , maxViewWithKey
 
     -- * Deep
-  , Deep
+  , Deep (D0)
   , pattern D1
   , pattern D2
   , pattern D3

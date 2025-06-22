@@ -4,6 +4,7 @@
 
 * fix `dataTypeOf` to show the correct module name
 * bump containers bound
+* export D0
 
 ## 0.3.2
 
