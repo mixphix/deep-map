@@ -1,5 +1,10 @@
 # Revision history for deep-map
 
+##
+
+* fix `dataTypeOf` to show the correct module name
+* bump containers bound
+
 ## 0.3.2
 
 * fix `Filterable` and `Witherable` instances

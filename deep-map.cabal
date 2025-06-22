@@ -41,7 +41,7 @@ library
   hs-source-dirs:  src
   build-depends:
     , base                 >=4.11   && <5
-    , containers           >=0.5.11 && <0.8
+    , containers           >=0.5.11 && <0.9
     , indexed-traversable  ^>=0.1.2
     , witherable           >=0.5
 

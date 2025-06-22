@@ -627,7 +627,7 @@ deriving instance
   (Typeable k, Typeable (DeepMap ks v)) => Typeable (DeepMap (k ': ks) v)
 
 tyDeepMap :: DataType
-tyDeepMap = mkDataType "Data.Map.Monoidal.Deep.DeepMap" [conCore, conWrap]
+tyDeepMap = mkDataType "Data.Map.Deep.DeepMap" [conCore, conWrap]
 
 conCore, conWrap :: Constr
 conCore = mkConstr tyDeepMap "Core" [] Data.Data.Prefix
