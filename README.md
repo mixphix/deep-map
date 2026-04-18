@@ -1,6 +1,6 @@
 # deep-map
 
-[![ci](https://img.shields.io/github/workflow/status/mixphix/deep-map/Haskell-CI)](https://github.com/mixphix/deep-map/actions/workflows/ci.yml)
+[![ci](https://img.shields.io/github/workflow/status/mixphix/deep-map/Haskell-CI)](https://github.com/mixphix/deep-map/actions/workflows/haskell-ci.yml)
 [![Hackage](https://img.shields.io/hackage/v/deep-map?color=purple)](https://hackage.haskell.org/package/deep-map)
 [![license](https://img.shields.io/github/license/mixphix/deep-map?color=purple)]()
 
