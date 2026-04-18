@@ -15,6 +15,14 @@ maintainer:         brown.m@pm.me
 extra-source-files:
   CHANGELOG.md
   README.md
+tested-with:
+  GHC==9.14.1,
+  GHC==9.12.2,
+  GHC==9.10.2,
+  GHC==9.8.2,
+  GHC==9.6.4,
+  GHC==9.4.8,
+  GHC==9.2.8,
 
 common extensions
   default-extensions:
