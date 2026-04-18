@@ -448,7 +448,7 @@ import Control.Arrow (Arrow ((&&&)), ArrowChoice ((+++), (|||)), (***))
 import Data.Bool (bool)
 import Data.Data
 import Data.Either (isLeft)
-import Data.Foldable (Foldable (fold, foldl', foldr', toList))
+import Data.Foldable (Foldable (fold, foldr', toList))
 import Data.Foldable.WithIndex
 import Data.Function ((&))
 import Data.Functor ((<&>))
@@ -620,11 +620,6 @@ instance
   WitherableWithIndex (Deep (j ': k ': ks)) (DeepMap (j ': k ': ks))
   where
   iwither f (Wrap m) = Wrap <$> itraverse (\k -> Witherable.iwither (f . D1 k)) m
-
-deriving instance (Typeable v) => Typeable (DeepMap '[] v)
-
-deriving instance
-  (Typeable k, Typeable (DeepMap ks v)) => Typeable (DeepMap (k ': ks) v)
 
 tyDeepMap :: DataType
 tyDeepMap = mkDataType "Data.Map.Deep.DeepMap" [conCore, conWrap]
