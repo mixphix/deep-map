@@ -45,26 +45,6 @@ jobs:
             compilerVersion: 9.10.2
             setup-method: ghcup
             allow-failure: false
-          - compiler: ghc-9.8.2
-            compilerKind: ghc
-            compilerVersion: 9.8.2
-            setup-method: ghcup
-            allow-failure: false
-          - compiler: ghc-9.6.4
-            compilerKind: ghc
-            compilerVersion: 9.6.4
-            setup-method: ghcup
-            allow-failure: false
-          - compiler: ghc-9.4.8
-            compilerKind: ghc
-            compilerVersion: 9.4.8
-            setup-method: ghcup
-            allow-failure: false
-          - compiler: ghc-9.2.8
-            compilerKind: ghc
-            compilerVersion: 9.2.8
-            setup-method: ghcup
-            allow-failure: false
       fail-fast: false
     steps:
       - name: apt-get install
@@ -181,8 +161,8 @@ jobs:
           echo "packages: ${PKGDIR_deep_map}" >> cabal.project
           echo "package deep-map" >> cabal.project
           echo "    ghc-options: -Werror=missing-methods -Werror=missing-fields" >> cabal.project
-          if [ $((HCNUMVER >= 90400)) -ne 0 ] ; then echo "package deep-map" >> cabal.project ; fi
-          if [ $((HCNUMVER >= 90400)) -ne 0 ] ; then echo "    ghc-options: -Werror=unused-packages" >> cabal.project ; fi
+          echo "package deep-map" >> cabal.project
+          echo "    ghc-options: -Werror=unused-packages" >> cabal.project
           echo "package deep-map" >> cabal.project
           echo "    ghc-options: -Werror=incomplete-patterns -Werror=incomplete-uni-patterns" >> cabal.project
           cat >> cabal.project <<EOF
